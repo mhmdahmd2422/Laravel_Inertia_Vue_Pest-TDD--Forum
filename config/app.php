@@ -170,6 +170,11 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
+
+        /*
+         * Testing Service Providers...
+         */
+        App\Providers\TestingProvider::class,
     ])->toArray(),
 
     /*
