@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -31,3 +32,6 @@ Route::get('posts', [PostController::class, 'index'])
 
 Route::get('posts/{post}', [PostController::class, 'show'])
     ->name('posts.show');
+
+Route::post('posts/{post}/comments', [CommentController::class, 'store'])
+    ->name('posts.comments.store');

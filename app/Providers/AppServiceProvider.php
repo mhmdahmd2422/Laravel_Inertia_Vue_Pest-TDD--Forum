@@ -23,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         JsonResource::withoutWrapping();
         Model::preventsLazyLoading();
+        Model::unguard();
     }
 }

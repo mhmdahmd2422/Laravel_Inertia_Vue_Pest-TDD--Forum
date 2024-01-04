@@ -7,13 +7,29 @@ import {formatDistance, parseISO} from "date-fns";
 import Pagination from "@/Components/Pagination.vue";
 import {relativeDate} from "../../Utilities/date.js";
 import Comment from "@/Components/Comment.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {router, useForm} from "@inertiajs/vue3";
+import TextArea from "@/Components/TextArea.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
    post: Object,
    comments: Object,
 })
 
-const formattedDate = computed(() => formatDistance(parseISO(props.post.created_at), new Date()));
+const commentForm = useForm({
+   body: '',
+});
+const addComment = () => {
+    return commentForm.post(route('posts.comments.store', props.post.id),
+        {
+            preserveScroll: true,
+            onSuccess: () => commentForm.reset(),
+        },
+    );
+};
 </script>
 
 <template>
@@ -27,6 +43,16 @@ const formattedDate = computed(() => formatDistance(parseISO(props.post.created_
 
             <div class="mt-12">
                 <h2 class="text-xl font-semibold">Comments</h2>
+
+                <form v-if="$page.props.auth.user" @submit.prevent="addComment"  class="mt-4">
+                    <div>
+                        <InputLabel for="body" class="sr-only">Comment</InputLabel>
+                        <TextArea v-model="commentForm.body" id="body" placeholder="Tell Us Something..." rows="4"/>
+                        <InputError :message="commentForm.errors.body" class="mt-1 font-bold"></InputError>
+                    </div>
+
+                    <PrimaryButton type="submit" class="mt-3" :disabled="commentForm.processing">Add Comment</PrimaryButton>
+                </form>
 
                 <ul class="divide-y  mt-4">
                     <li v-for="comment in comments.data"
