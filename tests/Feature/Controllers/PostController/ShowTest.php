@@ -22,7 +22,7 @@ it('passes a post to the view', function (){
         ->assertHasResource('post', PostResource::make($post));
 });
 
-it('passes a oomments to the view', function (){
+it('passes comments to the view', function (){
     $post = Post::factory()->create();
     $comments = Comment::factory(2)->for($post)->create();
     $comments->load('user');

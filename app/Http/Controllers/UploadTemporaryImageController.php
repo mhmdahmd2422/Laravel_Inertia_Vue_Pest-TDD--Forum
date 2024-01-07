@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\TemporaryImage;
-use http\Env\Response;
 use Illuminate\Http\Request;
 
 class UploadTemporaryImageController extends Controller
@@ -15,7 +14,7 @@ class UploadTemporaryImageController extends Controller
         }
 
         $request->validate([
-           'image' => ['required', 'file', 'image', 'extensions:jpeg,png'],
+           'image' => ['required', 'file', 'image'],
         ]);
 
         $path = $request->file('image')->store('public/images/temp');
@@ -30,11 +29,5 @@ class UploadTemporaryImageController extends Controller
         ]);
 
         return $image->name;
-    }
-
-    public function upload()
-
-    {
-
     }
 }

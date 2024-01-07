@@ -40,12 +40,6 @@ class CommentController extends Controller
             'post_id' => $post->id,
         ]);
 
-        $validatedImages = $request->validate([
-            'images' => ['required', 'array'],
-            'images.*' => ['nullable', 'string'],
-        ]);
-
-//        dd($request->images);
         foreach ($request->images as $tempImage){
             $tempImage = TemporaryImage::where('name', $tempImage)->first();
             Storage::disk('public')->copy('images/temp/'. $tempImage->name, 'images/comments/'. $tempImage->name);
@@ -59,7 +53,6 @@ class CommentController extends Controller
             Storage::disk('public')->delete('images/temp/'. $tempImage->name);
             $tempImage->delete();
         }
-
 
         return redirect()->route('posts.show', $post);
     }
