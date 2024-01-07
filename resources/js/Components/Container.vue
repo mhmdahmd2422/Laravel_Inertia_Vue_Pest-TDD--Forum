@@ -1,14 +1,18 @@
-<template>
+<script setup>
 
-    <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-        <div class="grid place-content-start mb-2">
-            <h2 v-if="$slots.header" class="font-extrabold bg-white text-xl text-gray-800 border border-gray-500 rounded p-3 leading-tight">
-                <slot name="header"></slot>
-            </h2>
+defineProps({
+    title: String,
+})
+</script>
+<template>
+    <Head :title="title" />
+    <!-- Page Heading -->
+    <header v-if="$slots.header" class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <slot name="header" />
         </div>
+    </header>
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <slot/>
     </div>
 </template>
-<script setup>
-
-</script>

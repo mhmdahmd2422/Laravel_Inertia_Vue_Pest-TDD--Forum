@@ -6,6 +6,7 @@ defineProps({
     canRegister: Boolean,
     laravelVersion: String,
     phpVersion: String,
+    layout: null,
 });
 </script>
 

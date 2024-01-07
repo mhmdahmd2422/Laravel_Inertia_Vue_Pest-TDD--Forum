@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput.vue';
 defineProps({
     canResetPassword: Boolean,
     status: String,
+    layout: null,
 });
 
 const form = useForm({

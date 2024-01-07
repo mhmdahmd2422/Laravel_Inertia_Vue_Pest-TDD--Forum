@@ -10,6 +10,7 @@ import TextInput from '@/Components/TextInput.vue';
 const props = defineProps({
     email: String,
     token: String,
+    layout: null,
 });
 
 const form = useForm({

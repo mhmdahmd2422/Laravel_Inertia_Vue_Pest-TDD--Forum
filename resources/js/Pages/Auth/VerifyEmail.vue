@@ -7,6 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     status: String,
+    layout: null,
 });
 
 const form = useForm({});
