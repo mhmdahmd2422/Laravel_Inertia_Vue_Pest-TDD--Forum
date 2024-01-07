@@ -35,3 +35,6 @@ Route::get('posts/{post}', [PostController::class, 'show'])
 
 Route::post('posts/{post}/comments', [CommentController::class, 'store'])
     ->name('posts.comments.store');
+
+Route::post('/upload', \App\Http\Controllers\UploadTemporaryImageController::class);
+Route::delete('/revert/{fileName}', \App\Http\Controllers\DeleteTemporaryImageController::class);

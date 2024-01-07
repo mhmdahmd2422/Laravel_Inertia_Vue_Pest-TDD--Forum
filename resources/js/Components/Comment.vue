@@ -15,6 +15,11 @@ defineProps({
         </div>
         <div>
             <p class="mt-1 break-all">{{ comment.body }}</p>
+            <div v-if="comment.images.length" class="grid grid-cols-6 gap-2 justify-evenly mt-4">
+                <div v-for="(image, index) in comment.images" :key="index">
+                    <img :src="'/storage/images/comments/' + image.name" class="h-40 w-40 rounded">
+                </div>
+            </div>
             <span class="first-letter:uppercase block pt-1 text-xs text-gray-600">By {{ comment.user.name }} {{ relativeDate(comment.created_at) }} ago</span>
         </div>
     </div>
