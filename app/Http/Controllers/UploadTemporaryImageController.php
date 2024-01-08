@@ -14,7 +14,7 @@ class UploadTemporaryImageController extends Controller
         }
 
         $request->validate([
-           'image' => ['required', 'file', 'image'],
+           'image' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png'],
         ]);
 
         $path = $request->file('image')->store('public/images/temp');

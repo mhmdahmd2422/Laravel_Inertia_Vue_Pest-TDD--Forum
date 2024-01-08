@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <Card class="mt-4 rounded-t-lg bg-gray-50">
+    <Card class="mt-4 rounded-t-xl bg-gray-50">
         <ul class="divide-y">
             <li v-for="comment in comments.data"
                 :key="comment.id"
