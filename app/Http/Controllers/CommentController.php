@@ -40,18 +40,20 @@ class CommentController extends Controller
             'post_id' => $post->id,
         ]);
 
-        foreach ($request->images as $tempImage){
-            $tempImage = TemporaryImage::where('name', $tempImage)->first();
-            Storage::disk('public')->copy('images/temp/'. $tempImage->name, 'images/comments/'. $tempImage->name);
-            CommentImage::create([
-                'user_id' => $request->user()->id,
-                'comment_id' => $comment->id,
-                'name' => $tempImage->name,
-                'extension' => $tempImage->extension,
-                'size' => $tempImage->size,
-            ]);
-            Storage::disk('public')->delete('images/temp/'. $tempImage->name);
-            $tempImage->delete();
+        if($request->has('images')){
+            foreach ($request->images as $tempImage){
+                $tempImage = TemporaryImage::where('name', $tempImage)->first();
+                Storage::disk('public')->copy('images/temp/'. $tempImage->name, 'images/comments/'. $tempImage->name);
+                CommentImage::create([
+                    'user_id' => $request->user()->id,
+                    'comment_id' => $comment->id,
+                    'name' => $tempImage->name,
+                    'extension' => $tempImage->extension,
+                    'size' => $tempImage->size,
+                ]);
+                Storage::disk('public')->delete('images/temp/'. $tempImage->name);
+                $tempImage->delete();
+            }
         }
 
         return redirect()->route('posts.show', $post);

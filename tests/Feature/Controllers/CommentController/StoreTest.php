@@ -4,6 +4,12 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use function Pest\Laravel\post;
+
+it('requires authentication', function () {
+    post(route('posts.comments.store', Post::factory()->create()))
+        ->assertRedirectToRoute('login');
+});
 
 it('can store a comment', function (){
     $user = User::factory()->create();

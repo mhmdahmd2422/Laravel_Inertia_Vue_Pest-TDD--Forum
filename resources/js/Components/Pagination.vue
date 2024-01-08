@@ -41,6 +41,7 @@ defineProps({
                 <nav class="isolate inline-flex -space-x-px rounded-md bg-white shadow-sm" aria-label="Pagination">
                     <Link :href="links.prev"
                           :only="only"
+                          preserve-state
                           preserve-scroll
                           class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     >
@@ -60,6 +61,7 @@ defineProps({
                     </Link>
                     <Link :href="links.next"
                           :only="only"
+                          preserve-state
                           preserve-scroll
                           class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     >
