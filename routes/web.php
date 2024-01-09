@@ -37,3 +37,7 @@ Route::get('posts/{post}', [PostController::class, 'show'])
 
 Route::post('/upload', \App\Http\Controllers\UploadTemporaryImageController::class);
 Route::delete('/revert/{fileName}', \App\Http\Controllers\DeleteTemporaryImageController::class);
+
+Route::get('test', function (){
+    return inertia('Test');
+});

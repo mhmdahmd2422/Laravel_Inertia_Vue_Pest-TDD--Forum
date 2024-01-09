@@ -4,7 +4,6 @@ import {useIntersect} from "@/Composables/useIntersect.js";
 
 export function useInfiniteScroll(propName, loader){
     const value = () => usePage().props[propName];
-    console.log(value());
     const items = ref(value().data);
     const initialUrl = usePage().url;
     const canLoadMoreItems = computed(() => value().links.next !== null);

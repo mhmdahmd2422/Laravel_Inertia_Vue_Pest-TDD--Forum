@@ -6,6 +6,7 @@ import {createInertiaApp, Head, Link} from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import AppLayout from "@/Layouts/AppLayout.vue";
+import Shell from "@/Components/Shell.vue";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -13,13 +14,13 @@ createInertiaApp({
     resolve: async (name) => {
         const { default: page } = await resolvePageComponent( `./Pages/${name}.vue`, import.meta.glob("./Pages/**/*.vue"));
 
-        if (page.layout === undefined) {
-            page.layout = AppLayout;
-        }
-
-        if (page.props?.layout === null) {
-            page.layout = undefined;
-        }
+        // if (page.layout === undefined) {
+        //     page.layout = Shell;
+        // }
+        //
+        // if (page.props?.layout === null) {
+        //     page.layout = undefined;
+        // }
 
         return page;
     },
@@ -33,7 +34,7 @@ createInertiaApp({
     },
     title: title => `My App - ${title}`,
     progress: {
-        color: '#FF36AE',
+        color: '#FFFFFF',
         showSpinner: true,
     }
 });

@@ -1,8 +1,9 @@
 <script setup>
 
-import Container from "@/Components/Container.vue";
 import Pagination from "@/Components/Pagination.vue";
-import {relativeDate} from "../../Utilities/date.js";
+import Shell from "@/Components/Shell.vue";
+import Grid from "@/Components/Grid.vue";
+import PostExcerpt from "@/Components/PostExcerpt.vue";
 
 defineProps({
     posts: Object,
@@ -11,24 +12,21 @@ defineProps({
 </script>
 
 <template>
-    <Container title="Posts">
+    <Shell title="Posts">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="text-3xl font-bold tracking-tight text-white">
                 Posts
             </h2>
         </template>
-        <ul class="divide-y">
-            <li v-for="post in posts.data" :key="post.id" class="">
-                <Link :href="route('posts.show', post.id)" class="block group px-2 py-4">
-                    <span class="font-semibold group-hover:text-indigo-600">
-                        {{post.title}}
-                    </span>
-                    <span class="block mt-1 text-sm text-gray-600"
-                    >{{relativeDate(post.created_at)}} ago by {{post.user.name}}
-                    </span>
-                </Link>
-            </li>
-        </ul>
+        <Grid class="mt-6">
+            <PostExcerpt v-for="post in posts.data"
+                   :key="post.id"
+                   :title="post.title"
+                   :body="post.body"
+                   :user="post.user.name"
+                   :posted-at="post.created_at">
+            </PostExcerpt>
+        </Grid>
         <Pagination :links="posts.links" :meta="posts.meta" ></Pagination>
-    </Container>
+    </Shell>
 </template>

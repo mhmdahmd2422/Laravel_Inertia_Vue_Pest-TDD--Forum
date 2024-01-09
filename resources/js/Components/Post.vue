@@ -1,20 +1,23 @@
 <script setup>
 
 import {relativeDate} from "@/Utilities/date.js";
-import Card from "@/Components/Card.vue";
+import ListItem from "@/Components/ListItem.vue";
 const props = defineProps({
     post: Object,
 })
 </script>
 
 <template>
-    <Card>
-        <template #header>
-            <h1 class="text-3xl font-extrabold">{{post.title}}</h1>
-            <span class="block mt-1 text-sm text-gray-600">{{relativeDate(post.created_at)}} ago by {{post.user.name}}</span>
-        </template>
-        <article class="mt-6">
-            <pre class="whitespace-pre-wrap font-sans">{{post.body}}</pre>
-        </article>
-    </Card>
+    <list-item>
+        <div class="sm:flex">
+            <div>
+                <div class="flex row">
+                    <img :src="post.user.profile_photo_url" alt="User avatar" class="h-16 w-16 text-gray-300 rounded-full">
+                    <h4 class="grow pt-4 ml-5 text-lg font-bold">{{post.user.name}}</h4>
+                    <span class="text-sm text-gray-500">Posted {{relativeDate(post.created_at)}} ago</span>
+                </div>
+                <p class="mt-4">{{post.body}}</p>
+            </div>
+        </div>
+    </list-item>
 </template>

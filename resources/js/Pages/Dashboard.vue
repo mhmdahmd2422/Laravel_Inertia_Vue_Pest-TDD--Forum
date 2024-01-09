@@ -1,23 +1,22 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
-import Container from "@/Components/Container.vue";
+import Shell from "@/Components/Shell.vue";
 </script>
 
 <template>
-    <Container title="Dashboard">
+    <Shell title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="text-3xl font-bold tracking-tight text-white">
                 Dashboard
             </h2>
         </template>
 
-        <div class="py-12">
+        <div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <Welcome />
                 </div>
             </div>
         </div>
-    </Container>
+    </Shell>
 </template>
