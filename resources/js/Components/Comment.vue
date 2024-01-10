@@ -22,8 +22,8 @@ defineProps({
             <div>
                 <span v-if="relativeDate" class="text-sm text-gray-500">{{ relativeDate(comment.created_at) }} ago</span>
             </div>
-            <div class="flex ml-7 px-6">
-                <div v-if="comment.images.length" class="grid grid-cols-6 gap-2 justify-evenly mt-4">
+            <div v-if="comment.images.length" class="flex ml-7 px-6">
+                <div class="grid grid-cols-6 gap-2 justify-evenly mt-4">
                     <div v-for="(image, index) in comment.images" :key="index">
                         <img :src="'/storage/images/comments/' + image.name" class="h-40 w-40 rounded">
                     </div>

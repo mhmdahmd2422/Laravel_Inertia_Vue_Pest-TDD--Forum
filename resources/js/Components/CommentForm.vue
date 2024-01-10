@@ -1,7 +1,7 @@
 <script setup>
 
 import {ref} from "vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm, usePage} from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextArea from "@/Components/TextArea.vue";
@@ -28,6 +28,10 @@ const addComment = () => {
             onSuccess: () => {
                 commentForm.reset();
                 uploadComponent +=1;
+                router.get(usePage().props['comments'].meta.path, {}, {
+                    preserveScroll: true,
+                    replace: true,
+                });
             },
         },
     );
