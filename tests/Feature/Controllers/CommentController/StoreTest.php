@@ -26,7 +26,7 @@ it('can store a comment', function (){
     ]);
 });
 
-it('can store a comment with images', function (){
+it('can upload and store a comment with images', function (){
     $user = User::factory()->create();
     $post = Post::factory()->create();
     $images = [];
