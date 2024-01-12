@@ -43,7 +43,7 @@ class CommentController extends Controller
         if($request->has('images')){
             foreach ($request->images as $tempImage){
                 $tempImage = TemporaryImage::where('name', $tempImage)->first();
-                Storage::disk('public')->copy('images/temp/'. $tempImage->name, 'images/comments/'. $tempImage->name);
+                Storage::disk('public')->move('images/temp/'. $tempImage->name, 'images/comments/'. $tempImage->name);
                 CommentImage::create([
                     'user_id' => $request->user()->id,
                     'comment_id' => $comment->id,
@@ -51,12 +51,11 @@ class CommentController extends Controller
                     'extension' => $tempImage->extension,
                     'size' => $tempImage->size,
                 ]);
-                Storage::disk('public')->delete('images/temp/'. $tempImage->name);
                 $tempImage->delete();
             }
         }
 
-        return back();
+        return redirect()->route('posts.show', $post);
     }
 
     /**
@@ -86,8 +85,18 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Request $request, Comment $comment)
     {
-        //
+        $this->authorize('delete', $comment);
+
+        if($comment->images){
+            foreach ($comment->images as $commentImage){
+                 Storage::disk('public')->delete('images/comments/'. $commentImage->name);
+                $commentImage->delete();
+            }
+        }
+        $comment->delete();
+
+        return redirect()->route('posts.show', $comment->post_id);
     }
 }

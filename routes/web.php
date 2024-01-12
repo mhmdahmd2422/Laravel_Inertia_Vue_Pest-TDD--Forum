@@ -27,6 +27,11 @@ Route::middleware([
     })->name('dashboard');
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])
         ->name('posts.comments.store');
+    Route::post('/upload', \App\Http\Controllers\UploadTemporaryImageController::class);
+    Route::delete('/revert/{fileName}', \App\Http\Controllers\DeleteTemporaryImageController::class);
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('comments.destroy')
+        ->can('delete', 'comment');
 });
 
 Route::get('posts', [PostController::class, 'index'])
@@ -34,10 +39,3 @@ Route::get('posts', [PostController::class, 'index'])
 
 Route::get('posts/{post}', [PostController::class, 'show'])
     ->name('posts.show');
-
-Route::post('/upload', \App\Http\Controllers\UploadTemporaryImageController::class);
-Route::delete('/revert/{fileName}', \App\Http\Controllers\DeleteTemporaryImageController::class);
-
-Route::get('test', function (){
-    return inertia('Test');
-});

@@ -98,8 +98,8 @@ defineProps({
                                             </template>
                                         </Dropdown>
                                     </div>
-                                    <div v-else>
-                                        <Link :href="route('login')">Log in</Link>
+                                    <div v-else class="text-white p-1 ml-2" >
+                                        <Link :href="route('login')">Login</Link>
                                     </div>
                                 </div>
                             </div>

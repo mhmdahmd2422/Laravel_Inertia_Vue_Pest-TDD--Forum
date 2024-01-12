@@ -2,11 +2,23 @@
 
 import {relativeDate} from "../Utilities/date.js";
 import ListItem from "@/Components/ListItem.vue";
+import {router, usePage} from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
     comment: Object,
 });
 
+const deleteComment = () => {
+    router.delete(route('comments.destroy', props.comment.id), {
+        preserveScroll: true,
+        replace: true,
+        onSuccess: () => {
+            router.get(usePage().props['comments'].meta.path, {}, {
+                preserveScroll: true,
+            });
+        },
+    });
+};
 </script>
 
 <template>
@@ -29,6 +41,9 @@ defineProps({
                     </div>
                 </div>
             </div>
+            <form @submit.prevent="deleteComment" v-if="comment.can?.delete">
+                <button type="submit">Delete</button>
+            </form>
         </div>
     </ListItem>
 </template>
