@@ -5,8 +5,11 @@ import { createApp, h } from 'vue';
 import {createInertiaApp, Head, Link} from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
-import AppLayout from "@/Layouts/AppLayout.vue";
-import Shell from "@/Components/Shell.vue";
+import * as FaIcons from "oh-vue-icons/icons/fa";
+import {addIcons, OhVueIcon} from "oh-vue-icons";
+
+const Fa = Object.values({ ...FaIcons });
+addIcons(...Fa);
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -30,6 +33,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .component('Link', Link)
             .component('Head', Head)
+            .component("v-icon", OhVueIcon)
             .mount(el);
     },
     title: title => `My App - ${title}`,

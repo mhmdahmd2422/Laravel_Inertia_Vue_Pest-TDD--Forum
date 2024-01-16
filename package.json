@@ -28,6 +28,7 @@
         "filepond-plugin-file-validate-size": "^2.2.8",
         "filepond-plugin-image-preview": "^4.6.12",
         "lodash": "^4.17.21",
+        "oh-vue-icons": "^1.0.0-rc3",
         "vue-filepond": "^7.0.4"
     }
 }
