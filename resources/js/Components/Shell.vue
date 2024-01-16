@@ -24,7 +24,7 @@ const navigation = [
     },
 ];
 
-defineProps({
+const props = defineProps({
     title: String,
 });
 </script>
@@ -98,8 +98,8 @@ defineProps({
                                             </template>
                                         </Dropdown>
                                     </div>
-                                    <div v-else class="text-white p-1 ml-2" >
-                                        <Link :href="route('login')">Login</Link>
+                                    <div v-else class="ml-2" >
+                                        <Link class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" :href="route('login')">Login</Link>
                                     </div>
                                 </div>
                             </div>
@@ -139,11 +139,18 @@ defineProps({
                     </div>
                 </DisclosurePanel>
             </Disclosure>
-            <header v-if="$slots.header" class="py-5">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <slot name="header"/>
+            <div class="flex">
+                <div class=" grow">
+                    <header v-if="$slots.header" class="py-5">
+                        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <slot name="header"/>
+                        </div>
+                    </header>
                 </div>
-            </header>
+                <div v-if="$slots.header" class="mr-6 mt-4">
+                    <slot name="search"></slot>
+                </div>
+            </div>
         </div>
 
         <main class="-mt-32">

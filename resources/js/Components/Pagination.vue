@@ -3,7 +3,11 @@ import {Link} from "@inertiajs/vue3";
 
 defineProps({
     links: Object,
-    meta: Object,
+    prev_page_url: String,
+    next_page_url: String,
+    from: Number,
+    to: Number,
+    total: Number,
     only: {
         type: Array,
         default: () => [],
@@ -14,14 +18,12 @@ defineProps({
 <template>
     <div class="flex items-center justify-between border-t border-gray-200 mt-6 px-4 py-3 sm:px-6">
         <div class="flex flex-1 justify-between sm:hidden">
-            <Link :href="links.prev"
+            <Link :href="prev_page_url"
                   :only="only"
-                  preserve-scroll
                   class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >Previous</Link>
-            <Link :href="links.next"
+            <Link :href="next_page_url"
                   :only="only"
-                  preserve-scroll
                   class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >Next</Link>
         </div>
@@ -29,20 +31,18 @@ defineProps({
             <div class="bg-white border border-gray-200 rounded-lg p-2">
                 <p class="text-sm text-gray-700">
                     Showing
-                    <span class="font-medium">{{meta.from}}</span>
+                    <span class="font-medium">{{from}}</span>
                     to
-                    <span class="font-medium">{{meta.to}}</span>
+                    <span class="font-medium">{{to}}</span>
                     of
-                    <span class="font-medium">{{meta.total}}</span>
+                    <span class="font-medium">{{total}}</span>
                     results
                 </p>
             </div>
             <div>
                 <nav class="isolate inline-flex -space-x-px rounded-md bg-white shadow-sm" aria-label="Pagination">
-                    <Link :href="links.prev"
+                    <Link :href="prev_page_url"
                           :only="only"
-                          preserve-state
-                          preserve-scroll
                           class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     >
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -50,19 +50,16 @@ defineProps({
                         </svg>
                         <span>Previous</span>
                     </Link>
-                    <Link v-for="link in meta.links.slice(1, -1)"
+                    <Link v-for="link in links.slice(1,-1)"
                           :href="link.url"
                           :only="only"
-                          preserve-scroll
                           :class="{'relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0': !link.active,
                           'relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600': link.active}"
                     >
                         {{link.label}}
                     </Link>
-                    <Link :href="links.next"
+                    <Link :href="next_page_url"
                           :only="only"
-                          preserve-state
-                          preserve-scroll
                           class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     >
                         <span>Next</span>

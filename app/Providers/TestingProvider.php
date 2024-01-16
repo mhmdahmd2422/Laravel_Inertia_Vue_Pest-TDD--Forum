@@ -46,7 +46,7 @@ class TestingProvider extends ServiceProvider
             $this->hasResource("{$key}.data", $resource);
 
             expect($this->prop($key))
-                ->toHaveKeys(['data', 'links', 'meta']);
+                ->toHaveKeys(['data', 'links']);
 
             return $this;
         });

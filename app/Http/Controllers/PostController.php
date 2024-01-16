@@ -15,7 +15,15 @@ class PostController extends Controller
     public function index()
     {
         return inertia('Posts/Index', [
-            'posts' => PostResource::collection(Post::with('user')->latest('id')->paginate(12)),
+            'posts' => PostResource::collection(
+                Post::query()
+                    ->when(request()->input('search'), function ($query, $search){
+                        $query->where('title', 'like', "%{$search}%");
+                    })
+                    ->latest('id')
+                    ->paginate(12))
+                    ->withQueryString(),
+            'filters' => request()->only(['search']),
         ]);
     }
 

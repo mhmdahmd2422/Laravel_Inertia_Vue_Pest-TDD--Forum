@@ -20,7 +20,8 @@ const {items, loadMoreItems} = useInfiniteScroll('comments', loader);
     <Shell :title="post.title">
         <Post :post="post"/>
         <div class="mt-5">
-            <CommentForm :post="post" :csrf_token="props.csrf_token"/>
+            <CommentForm v-if="$page.props.auth.user" :post="post" :csrf_token="props.csrf_token"/>
+            <p class="mt-11 text-2xl font-bold">Comments</p>
             <Comment v-for="comment in items" :comment="comment" :key="comment.id" ></Comment>
             <div ref="loader"></div>
         </div>

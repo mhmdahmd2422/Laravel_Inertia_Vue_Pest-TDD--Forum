@@ -4,11 +4,27 @@ import Pagination from "@/Components/Pagination.vue";
 import Shell from "@/Components/Shell.vue";
 import Grid from "@/Components/Grid.vue";
 import PostExcerpt from "@/Components/PostExcerpt.vue";
+import {ref, watch} from "vue";
+import {debounce} from "lodash";
+import {router} from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
     posts: Object,
+    links: Object,
+    filters: Object,
 });
 
+let search = ref(props.filters.search);
+watch(search, debounce(function(value){
+        router.get(
+            route('posts.index'),
+            {search: value},
+            {
+                preserveState: true,
+                replace: true,
+            });
+    }, 300)
+);
 </script>
 
 <template>
@@ -18,15 +34,31 @@ defineProps({
                 Posts
             </h2>
         </template>
+        <template #search>
+            <input v-model="search"
+                   type="text"
+                   placeholder="Search"
+                   class="h-12 w-56 rounded-full text-black placeholder-grey-800"
+            >
+        </template>
+        <div v-if="!posts.data.length" class="grid justify-items-center bg-gray-400 text-gray-600 h-16 rounded-md">
+            No Posts Found!
+        </div>
         <Grid class="mt-6">
             <PostExcerpt v-for="post in posts.data"
                    :key="post.id"
                    :title="post.title"
                    :body="post.body"
-                   :user="post.user.name"
                    :posted-at="post.created_at">
             </PostExcerpt>
         </Grid>
-        <Pagination :links="posts.links" :meta="posts.meta" ></Pagination>
+        <Pagination
+            :links="posts.links"
+            :prev_page_url="posts.prev_page_url"
+            :next_page_url="posts.next_page_url"
+            :from="posts.from"
+            :to="posts.to"
+            :total="posts.total"
+        ></Pagination>
     </Shell>
 </template>

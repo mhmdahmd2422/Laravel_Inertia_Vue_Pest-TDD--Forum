@@ -7,9 +7,6 @@ const props = defineProps({
     title: {
         type: String,
     },
-    user: {
-        type: String,
-    },
     body: {
         type: String,
     },
