@@ -65,3 +65,13 @@ it('prevents deleting a comment by another user', function () {
         ->assertForbidden();
     $this->assertModelExists($comment);
 });
+
+it('prevents deleting a comment created more than one hour ago', function () {
+    $this->freezeTime();
+    $comment = Comment::factory()->create();
+    $this->travel(1)->hour();
+    \Pest\Laravel\actingAs($comment->user)
+        ->delete(route('comments.destroy', $comment))
+        ->assertForbidden();
+    $this->assertModelExists($comment);
+});
