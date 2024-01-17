@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <list-item>
+    <list-item class="hover:bg-white">
         <div class="sm:flex">
             <div>
                 <div class="flex row">
