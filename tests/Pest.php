@@ -11,7 +11,11 @@
 |
 */
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use function Pest\Laravel\actingAs;
 
 uses(
     Tests\TestCase::class,
@@ -44,7 +48,30 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function createCommentWithImages(User $user, Post $post, int $imageCount): void
 {
-    // ..
+    $images = uploadFakeImages($user, $imageCount);
+
+    actingAs($user)->post(route('posts.comments.store', $post), [
+        'body' => 'this is a test comment.',
+        'images' => array_map(function ($image){
+            return $image->hashName();
+        }, $images),
+    ]);
+}
+
+function uploadFakeImages(User $user, int $imageCount): array
+{
+    $images = [];
+    for ($i=0;$i<$imageCount;$i++){
+        $images[] = UploadedFile::fake()->image('commentImage-'.$i.'.png');
+    }
+
+    foreach ($images as $image) {
+        actingAs($user)->post(url('/upload'), [
+            'image' => $image
+        ]);
+    }
+
+    return $images;
 }

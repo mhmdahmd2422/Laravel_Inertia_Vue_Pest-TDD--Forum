@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\Comment;
+use App\Models\CommentImage;
 use App\Models\Post;
+use App\Models\TemporaryImage;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
 it('requires authentication', function () {
@@ -15,7 +18,7 @@ it('can store a comment', function (){
     $user = User::factory()->create();
     $post = Post::factory()->create();
 
-    \Pest\Laravel\actingAs($user)->post(route('posts.comments.store', $post), [
+    actingAs($user)->post(route('posts.comments.store', $post), [
         'body' => 'this is a test comment.'
     ]);
 
@@ -29,22 +32,19 @@ it('can store a comment', function (){
 it('can upload and store a comment with images', function (){
     $user = User::factory()->create();
     $post = Post::factory()->create();
-    $images = [];
-    for ($i=0;$i<3;$i++){
-        $images[] = \Illuminate\Http\UploadedFile::fake()->image('commentImage-'.$i.'.png');
-    }
+    $images = uploadFakeImages($user, 3);
     foreach ($images as $image) {
-        \Pest\Laravel\actingAs($user)->post(url('/upload'), [
+        actingAs($user)->post(url('/upload'), [
             'image' => $image
         ]);
         Storage::assertExists('public/images/temp/' . $image->hashName());
-        $this->assertDatabaseHas(\App\Models\TemporaryImage::class, [
+        $this->assertDatabaseHas(TemporaryImage::class, [
             'name' => $image->hashName(),
             'extension' => $image->extension(),
             'size' => $image->getSize(),
         ]);
     }
-    \Pest\Laravel\actingAs($user)->post(route('posts.comments.store', $post), [
+    actingAs($user)->post(route('posts.comments.store', $post), [
         'body' => 'this is a test comment.',
         'images' => array_map(function ($image){
             return $image->hashName();
@@ -59,12 +59,13 @@ it('can upload and store a comment with images', function (){
     foreach ($images as $image) {
         Storage::assertExists('public/images/comments/' . $image->hashName());
         Storage::assertMissing('public/images/temp/' . $image->hashName());
-        $this->assertDatabaseMissing(\App\Models\TemporaryImage::class, [
+        $this->assertDatabaseMissing(TemporaryImage::class, [
             'name' => $image->hashName(),
             'extension' => $image->extension(),
             'size' => $image->getSize(),
         ]);
-        $this->assertDatabaseHas(\App\Models\CommentImage::class, [
+        $this->assertDatabaseHas(CommentImage::class, [
+            'user_id' => $user->id,
             'name' => $image->hashName(),
             'extension' => $image->extension(),
             'size' => $image->getSize(),
@@ -75,7 +76,7 @@ it('can upload and store a comment with images', function (){
 it('redirects to the post show page', function () {
     $post = Post::factory()->create();
 
-    \Pest\Laravel\actingAs(User::factory()->create())
+    actingAs(User::factory()->create())
         ->post(route('posts.comments.store', $post), [
         'body' => 'this is a test comment.'
     ])
@@ -85,7 +86,7 @@ it('redirects to the post show page', function () {
 it('requires a valid body', function ($testValue) {
     $post = Post::factory()->create();
 
-    \Pest\Laravel\actingAs(User::factory()->create())
+    actingAs(User::factory()->create())
         ->post(route('posts.comments.store', $post), [
             'body' => $testValue
         ])
