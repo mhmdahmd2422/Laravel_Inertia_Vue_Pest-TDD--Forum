@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentImageController;
 use App\Http\Controllers\PostController;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Controllers\TemporaryImageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,13 +25,12 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::post('posts/{post}/comments', [CommentController::class, 'store'])
-        ->name('posts.comments.store');
-    Route::post('/upload', \App\Http\Controllers\UploadTemporaryImageController::class);
-    Route::delete('/revert/{fileName}', \App\Http\Controllers\DeleteTemporaryImageController::class);
-    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])
-        ->name('comments.destroy')
-        ->can('delete', 'comment');
+    Route::post('/upload', [TemporaryImageController::class, 'store']);
+    Route::delete('/revert/{fileName}', [TemporaryImageController::class, 'destroy']);
+    Route::delete('/image/{commentImage}', CommentImageController::class)
+        ->name('image.destroy');
+    Route::resource('posts.comments', CommentController::class)
+        ->shallow()->only(['store', 'update', 'destroy']);
 });
 
 Route::get('posts', [PostController::class, 'index'])

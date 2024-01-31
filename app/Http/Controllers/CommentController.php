@@ -11,20 +11,10 @@ use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function __construct()
     {
-        //
+        $this->authorizeResource(Comment::class);
     }
 
     /**
@@ -42,16 +32,12 @@ class CommentController extends Controller
 
         if($request->has('images')){
             foreach ($request->images as $tempImage){
-                $tempImage = TemporaryImage::where('name', $tempImage)->first();
-                Storage::disk('public')->move('images/temp/'. $tempImage->name, 'images/comments/'. $tempImage->name);
-                CommentImage::create([
-                    'user_id' => $request->user()->id,
-                    'comment_id' => $comment->id,
-                    'name' => $tempImage->name,
-                    'extension' => $tempImage->extension,
-                    'size' => $tempImage->size,
-                ]);
-                $tempImage->delete();
+                $this->attachImageToComment($tempImage, $request->user()->id, $comment);
+
+                //solve 'can upload and store a comment with images' bug
+                if(TemporaryImage::where('name', $tempImage)->first()){
+                    TemporaryImage::where('name', $tempImage)->delete();
+                }
             }
         }
 
@@ -59,27 +45,24 @@ class CommentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Comment $comment)
     {
-        //
+        if($request->has('images')){
+            foreach ($request->images as $tempImage){
+                if(!is_array($tempImage)){
+                    $this->attachImageToComment($tempImage, $request->user()->id, $comment);
+                }
+            }
+        }
+        $ValidatedData = $request->validate([
+            'body' => ['required', 'string', 'max:2500'],
+        ]);
+
+        $comment->update($ValidatedData);
+
+        return redirect()->route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);
     }
 
     /**
@@ -87,8 +70,6 @@ class CommentController extends Controller
      */
     public function destroy(Request $request, Comment $comment)
     {
-        $this->authorize('delete', $comment);
-
         if($comment->images){
             foreach ($comment->images as $commentImage){
                  Storage::disk('public')->delete('images/comments/'. $commentImage->name);
@@ -98,5 +79,25 @@ class CommentController extends Controller
         $comment->delete();
 
         return redirect()->route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);
+    }
+
+    /**
+     * @param mixed $tempImage
+     * @param Request $request
+     * @param $comment
+     * @return void
+     */
+    public function attachImageToComment(string $tempImage, int $userId, Comment $comment): void
+    {
+        $tempImage = TemporaryImage::where('name', $tempImage)->first();
+        Storage::disk('public')->move('images/temp/' . $tempImage->name, 'images/comments/' . $tempImage->name);
+        CommentImage::create([
+            'user_id' => $userId,
+            'comment_id' => $comment->id,
+            'name' => $tempImage->name,
+            'extension' => $tempImage->extension,
+            'size' => $tempImage->size,
+        ]);
+        $tempImage->delete();
     }
 }
