@@ -53,10 +53,11 @@ it('can delete a comment with images', function () {
     ]);
 });
 
-it('redirects to the post show page', function () {
+it('redirects to the post show page with toast', function () {
     $comment = Comment::factory()->create();
     actingAs($comment->user)->delete(route('comments.destroy', $comment))
-        ->assertRedirectToRoute('posts.show', $comment->post_id);
+        ->assertRedirectToRoute('posts.show', $comment->post_id)
+        ->assertSessionHas('flash.banner', 'Comment Deleted.');
 });
 
 it('prevents deleting a comment by another user', function () {

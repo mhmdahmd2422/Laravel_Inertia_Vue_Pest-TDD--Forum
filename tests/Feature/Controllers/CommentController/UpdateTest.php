@@ -80,7 +80,8 @@ it('redirects to the post page', function () {
 
     actingAs($comment->user)
         ->put(route('comments.update', $comment), ['body' => 'This is a new body'])
-        ->assertRedirectToRoute('posts.show', $comment->post);
+        ->assertRedirectToRoute('posts.show', $comment->post)
+        ->assertSessionHas('flash.banner', 'Comment Updated.');
 });
 
 it('redirects to the correct comments page', function () {

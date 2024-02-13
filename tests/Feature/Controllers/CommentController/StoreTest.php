@@ -73,14 +73,15 @@ it('can upload and store a comment with images', function (){
     }
 });
 
-it('redirects to the post show page', function () {
+it('redirects to the post show page with toast', function () {
     $post = Post::factory()->create();
 
     actingAs(User::factory()->create())
         ->post(route('posts.comments.store', $post), [
         'body' => 'this is a test comment.'
     ])
-    ->assertRedirectToRoute('posts.show', $post);
+    ->assertRedirectToRoute('posts.show', $post)
+    ->assertSessionHas('flash.banner', 'Comment Added.');
 });
 
 it('requires a valid body', function ($testValue) {
