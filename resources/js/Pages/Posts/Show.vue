@@ -27,7 +27,6 @@ const commentBeingEdited = computed(() => items.value.find(comment => comment.id
 const editArea = ref(null);
 const editComment = (commentId) => {
     commentIdBeingEdited.value = commentId;
-    console.log(commentBeingEdited.value);
     commentForm.body = commentBeingEdited.value?.body;
     commentForm.images = commentBeingEdited.value?.images;
     editArea.value.commentTextAreaRef?.focus();
@@ -55,10 +54,7 @@ const addComment = () => {
             preserveScroll: true,
             onSuccess: () => {
                 commentForm.reset();
-                router.get(usePage().props['comments'].meta.path, {}, {
-                    preserveScroll: true,
-                    replace: true,
-                });
+                items.value = [props.comments.data[0] ,...items.value];
             },
         },
     );
@@ -69,11 +65,23 @@ const updateComment = () => {
         {
             preserveScroll: true,
             onSuccess: () => {
+                window.history.replaceState({}, '', props.comments.meta.path);
+                for (const [key, comment] of Object.entries(items.value)) {
+                    if (comment.id === commentIdBeingEdited.value)  {
+                        items.value[key].body = commentForm.body;
+                        if(commentForm.images?.length){
+                            let counter = 0;
+                            for (const [element] of Object.entries(commentForm.images)) {
+                                if(! element.id){
+                                    items.value[key].images.push({"id": usePage().props.flash?.info[counter], "name": element});
+                                    counter++;
+                                }
+                            }
+                        }
+                    }
+                }
+                commentForm.reset();
                 cancelEditComment();
-                router.get(usePage().props['comments'].meta.path, {}, {
-                    preserveScroll: true,
-                    replace: true,
-                });
             },
         },
     );

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CommentImageController extends Controller
 {
-    public function __invoke(Request $request, CommentImage $commentImage)
+    public function destroy(CommentImage $commentImage): void
     {
             Storage::disk('public')->delete('images/comments/'. $commentImage->name);
             $commentImage->delete();

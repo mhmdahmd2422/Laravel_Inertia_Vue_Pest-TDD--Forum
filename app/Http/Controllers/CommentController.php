@@ -41,7 +41,8 @@ class CommentController extends Controller
             }
         }
 
-        return redirect()->route('posts.show', $post);
+        return redirect()->route('posts.show', $post)
+            ->banner('Comment Added.');
     }
 
     /**
@@ -50,9 +51,10 @@ class CommentController extends Controller
     public function update(Request $request, Comment $comment)
     {
         if($request->has('images')){
+            $imagesId = [];
             foreach ($request->images as $tempImage){
                 if(!is_array($tempImage)){
-                    $this->attachImageToComment($tempImage, $request->user()->id, $comment);
+                    $imagesId[] = $this->attachImageToComment($tempImage, $request->user()->id, $comment);
                 }
             }
         }
@@ -62,7 +64,12 @@ class CommentController extends Controller
 
         $comment->update($ValidatedData);
 
-        return redirect()->route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);
+        return redirect()->route('posts.show', [
+            'post' => $comment->post_id,
+            'page' => $request->query('page')
+        ])
+            ->with(['info' => $imagesId?? null])
+            ->banner('Comment Updated.');
     }
 
     /**
@@ -78,20 +85,17 @@ class CommentController extends Controller
         }
         $comment->delete();
 
-        return redirect()->route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);
+        return redirect()->route('posts.show', [
+            'post' => $comment->post_id,
+            'page' => $request->query('page')
+        ])->banner('Comment Deleted.');;
     }
 
-    /**
-     * @param mixed $tempImage
-     * @param Request $request
-     * @param $comment
-     * @return void
-     */
-    public function attachImageToComment(string $tempImage, int $userId, Comment $comment): void
+    public function attachImageToComment(string $tempImage, int $userId, Comment $comment)
     {
         $tempImage = TemporaryImage::where('name', $tempImage)->first();
         Storage::disk('public')->move('images/temp/' . $tempImage->name, 'images/comments/' . $tempImage->name);
-        CommentImage::create([
+        $commentImage = CommentImage::create([
             'user_id' => $userId,
             'comment_id' => $comment->id,
             'name' => $tempImage->name,
@@ -99,5 +103,7 @@ class CommentController extends Controller
             'size' => $tempImage->size,
         ]);
         $tempImage->delete();
+
+        return $commentImage->id;
     }
 }

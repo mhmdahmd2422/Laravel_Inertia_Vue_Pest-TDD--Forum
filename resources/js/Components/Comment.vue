@@ -4,10 +4,12 @@ import {relativeDate} from "../Utilities/date.js";
 import ListItem from "@/Components/ListItem.vue";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import EditButton from "@/Components/EditButton.vue";
+import {computed} from "vue";
 
 const props = defineProps({
     comment: Object,
 });
+const commentWithImages = computed(() => Object.values(props.comment.images).filter(image => image.id));
 
 const emit = defineEmits(['delete', 'edit']);
 </script>
@@ -35,7 +37,7 @@ const emit = defineEmits(['delete', 'edit']);
             </div>
             <div v-if="comment.images?.length" class="flex ml-7 px-6">
                 <div class="grid grid-cols-6 gap-2 justify-evenly mt-4">
-                    <div v-for="(image, index) in comment.images" :key="index">
+                    <div v-for="(image, index) in commentWithImages" :key="index">
                         <img v-if="image.id" :src="'/storage/images/comments/' + image.name" class="h-40 w-40 rounded">
                     </div>
                 </div>

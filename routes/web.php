@@ -27,7 +27,7 @@ Route::middleware([
     })->name('dashboard');
     Route::post('/upload', [TemporaryImageController::class, 'store']);
     Route::delete('/revert/{fileName}', [TemporaryImageController::class, 'destroy']);
-    Route::delete('/image/{commentImage}', CommentImageController::class)
+    Route::delete('/image/{commentImage}', [CommentImageController::class, 'destroy'])
         ->name('image.destroy');
     Route::resource('posts.comments', CommentController::class)
         ->shallow()->only(['store', 'update', 'destroy']);
