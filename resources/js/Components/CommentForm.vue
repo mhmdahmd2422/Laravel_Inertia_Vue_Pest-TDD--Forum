@@ -23,10 +23,11 @@ const commentTextAreaRef = ref(null);
 defineExpose({
     commentTextAreaRef,
 });
+
 </script>
 
 <template>
-    <list-item class="my-8">
+    <list-item class="my-5">
         <form v-if="$page.props.auth.user" @submit.prevent="() => inEditMode ? $emit('update') : $emit('add')"  class="mt-4">
             <div>
                 <InputLabel for="body" class="sr-only">Comment</InputLabel>

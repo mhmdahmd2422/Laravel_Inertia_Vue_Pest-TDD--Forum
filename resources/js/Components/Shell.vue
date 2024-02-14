@@ -6,6 +6,7 @@ import { router, usePage } from "@inertiajs/vue3";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Banner from "@/Components/Banner.vue";
+import ConfirmationModalWrapper from "@/Components/ConfirmationModalWrapper.vue";
 
 const logout = () => {
     router.post(route('logout'));
@@ -157,11 +158,13 @@ const props = defineProps({
             </div>
 
             <main class="-mt-32">
-                <div class="mt-5 mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+                <div class="mt-2 mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
                     <slot></slot>
                 </div>
             </main>
         </div>
+
+        <ConfirmationModalWrapper/>
     </div>
 </template>
 
