@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comment_images', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(\App\Models\Comment::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
+            $table->morphs('imageable');
             $table->string('name');
             $table->string('extension');
             $table->unsignedInteger('size');
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comment_images');
+        Schema::dropIfExists('images');
     }
 };
