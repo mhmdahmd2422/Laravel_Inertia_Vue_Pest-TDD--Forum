@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Comment;
-use App\Models\CommentImage;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\TemporaryImage;
 use App\Models\User;
@@ -34,9 +34,6 @@ it('can upload and store a comment with images', function (){
     $post = Post::factory()->create();
     $images = uploadFakeImages($user, 3);
     foreach ($images as $image) {
-        actingAs($user)->post(url('/upload'), [
-            'image' => $image
-        ]);
         Storage::assertExists('public/images/temp/' . $image->hashName());
         $this->assertDatabaseHas(TemporaryImage::class, [
             'name' => $image->hashName(),
@@ -50,12 +47,6 @@ it('can upload and store a comment with images', function (){
             return $image->hashName();
         }, $images),
     ]);
-
-    $this->assertDatabaseHas(Comment::class, [
-        'user_id' => $user->id,
-        'post_id' => $post->id,
-        'body' => 'this is a test comment.'
-    ]);
     foreach ($images as $image) {
         Storage::assertExists('public/images/comments/' . $image->hashName());
         Storage::assertMissing('public/images/temp/' . $image->hashName());
@@ -64,13 +55,17 @@ it('can upload and store a comment with images', function (){
             'extension' => $image->extension(),
             'size' => $image->getSize(),
         ]);
-        $this->assertDatabaseHas(CommentImage::class, [
+        $this->assertDatabaseHas(Image::class, [
             'user_id' => $user->id,
+            'imageable_type' => Comment::class,
             'name' => $image->hashName(),
             'extension' => $image->extension(),
             'size' => $image->getSize(),
         ]);
     }
+
+    //clean-up
+    clearImages('comments', Comment::first()->images);
 });
 
 it('redirects to the post show page with toast', function () {

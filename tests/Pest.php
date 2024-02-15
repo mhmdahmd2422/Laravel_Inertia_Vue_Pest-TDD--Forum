@@ -13,8 +13,10 @@
 
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
 
 uses(
@@ -48,7 +50,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function createCommentWithImages(User $user, Post $post, int $imageCount): void
+function createCommentWithImages(User $user, Post $post, int $imageCount): array
 {
     $images = uploadFakeImages($user, $imageCount);
 
@@ -58,6 +60,8 @@ function createCommentWithImages(User $user, Post $post, int $imageCount): void
             return $image->hashName();
         }, $images),
     ]);
+
+    return $images;
 }
 
 function uploadFakeImages(User $user, int $imageCount): array
@@ -74,4 +78,12 @@ function uploadFakeImages(User $user, int $imageCount): array
     }
 
     return $images;
+}
+
+function clearImages(string $directory, Collection $images)
+{
+    foreach ($images as $image){
+        Storage::disk('public')->delete('images/'.$directory.'/'. $image->name);
+        $image->delete();
+    }
 }

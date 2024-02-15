@@ -1,10 +1,9 @@
 <?php
 
 use App\Models\Comment;
-use App\Models\CommentImage;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\put;
 
@@ -40,39 +39,22 @@ it('can add photos to existing comment that includes photos', function () {
             'body' => 'This is a new body',
             'images' => array_map(function ($image){
                 return $image->hashName();
-            }, $images = uploadFakeImages($user, 2)),
+            },
+            $images = uploadFakeImages($user, 2)),
         ]);
     foreach ($images as $image) {
-        $this->assertDatabaseHas(CommentImage::class, [
+        $this->assertDatabaseHas(Image::class, [
             'user_id' => $user->id,
-            'comment_id'  => $comment->id,
+            'imageable_type'  => Comment::class,
+            'imageable_id'  => $comment->id,
             'name' => $image->hashName(),
         ]);
     }
     expect($comment->fresh()->images)
         ->tohaveCount(4);
-});
 
-it('can delete photos from existing comment that includes photos', function () {
-    $user = User::factory()->create();
-    $post = Post::factory()->create();
-    createCommentWithImages($user, $post, 2);
-    $comment = Comment::first();
-
-    $imageToBeDeleted = $comment->images->first();
-
-    actingAs($comment->user)
-        ->delete(route('image.destroy', $imageToBeDeleted));
-
-    Storage::assertMissing('public/images/comments/' . $imageToBeDeleted);
-    $this->assertDatabaseMissing(CommentImage::class, [
-       'user_id' => $user->id,
-        'comment_id' => $comment->id,
-        'name' => $imageToBeDeleted->name,
-    ]);
-
-    expect($comment->fresh()->images)
-        ->toHaveCount(1);
+    //clean-up
+    clearImages('comments', $comment->fresh()->images);
 });
 
 it('redirects to the post page', function () {

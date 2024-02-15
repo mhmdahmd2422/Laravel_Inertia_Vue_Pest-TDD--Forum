@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Comment;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
@@ -21,36 +22,46 @@ it('can delete a comment', function () {
 it('can delete a comment with images', function () {
     $user = User::factory()->create();
     $post = Post::factory()->create();
-    $images = [];
-    for ($i=0;$i<3;$i++){
-        $images[] = \Illuminate\Http\UploadedFile::fake()->image('commentImage-'.$i.'.png');
-    }
-    foreach ($images as $image) {
-        actingAs($user)->post(url('/upload'), [
-            'image' => $image
-        ]);
-    }
-    actingAs($user)->post(route('posts.comments.store', $post), [
-        'body' => 'This is a test comment.',
-        'images' => array_map(function ($image){
-            return $image->hashName();
-        }, $images),
-    ]);
+    $images = createCommentWithImages($user, $post, 3);
     $comment = $user->comments()->first();
     actingAs($user)->delete(route('comments.destroy', $comment->id));
     foreach ($images as $image) {
         Storage::assertMissing('public/images/comments/' . $image->hashName());
-        $this->assertDatabaseMissing(\App\Models\CommentImage::class, [
+        $this->assertDatabaseMissing(Image::class, [
             'name' => $image->hashName(),
+            'imageable_type' => Comment::class,
+            'imageable_id' => $comment->id,
             'extension' => $image->extension(),
             'size' => $image->getSize(),
         ]);
     }
-    $this->assertDatabaseMissing(\App\Models\Comment::class, [
-        'id' => $comment->id,
+    $this->assertModelMissing($comment);
+});
+
+it('can delete photos from existing comment that includes photos', function () {
+    $user = User::factory()->create();
+    $post = Post::factory()->create();
+    createCommentWithImages($user, $post, 2);
+    $comment = Comment::first();
+
+    $imageToBeDeleted = $comment->images->first();
+
+    actingAs($comment->user)
+        ->delete(route('image.destroy', $imageToBeDeleted));
+
+    Storage::assertMissing('public/images/comments/' . $imageToBeDeleted);
+    $this->assertDatabaseMissing(Image::class, [
         'user_id' => $user->id,
-        'post_id' => $post->id,
+        'imageable_type'  => Comment::class,
+        'imageable_id'  => $comment->id,
+        'name' => $imageToBeDeleted->name,
     ]);
+
+    expect($comment->fresh()->images)
+        ->toHaveCount(1);
+
+    //clean-up
+    clearImages('comments', $comment->images);
 });
 
 it('redirects to the post show page with toast', function () {
@@ -62,7 +73,7 @@ it('redirects to the post show page with toast', function () {
 
 it('prevents deleting a comment by another user', function () {
     $comment = Comment::factory()->create();
-    actingAs(\App\Models\User::factory()->create())
+    actingAs(User::factory()->create())
         ->delete(route('comments.destroy', $comment))
         ->assertForbidden();
     $this->assertModelExists($comment);
