@@ -64,6 +64,9 @@ it('can upload and store a comment with images', function (){
         ]);
     }
 
+    expect(Comment::first()->images)
+        ->toHaveCount(3);
+
     //clean-up
     clearImages('comments', Comment::first()->images);
 });

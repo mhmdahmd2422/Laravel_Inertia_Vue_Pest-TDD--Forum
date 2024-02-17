@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\Image;
 use App\Models\Post;
+use App\Models\TemporaryImage;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
@@ -26,6 +29,47 @@ it('stores a post', function () {
        'user_id' => $user->id,
         ...$this->validData,
     ]);
+});
+
+it('can upload and store a post with images', function (){
+    $user = User::factory()->create();
+    $images = uploadFakeImages($user, 3);
+    foreach ($images as $image) {
+        Storage::assertExists('public/images/temp/' . $image->hashName());
+        $this->assertDatabaseHas(TemporaryImage::class, [
+            'name' => $image->hashName(),
+            'extension' => $image->extension(),
+            'size' => $image->getSize(),
+        ]);
+    }
+    actingAs($user)->post(route('posts.store'), [
+        ...$this->validData,
+        'images' => array_map(function ($image){
+            return $image->hashName();
+        }, $images),
+    ]);
+    foreach ($images as $image) {
+        Storage::assertExists('public/images/posts/' . $image->hashName());
+        Storage::assertMissing('public/images/temp/' . $image->hashName());
+        $this->assertDatabaseMissing(TemporaryImage::class, [
+            'name' => $image->hashName(),
+            'extension' => $image->extension(),
+            'size' => $image->getSize(),
+        ]);
+        $this->assertDatabaseHas(Image::class, [
+            'user_id' => $user->id,
+            'imageable_type' => Post::class,
+            'name' => $image->hashName(),
+            'extension' => $image->extension(),
+            'size' => $image->getSize(),
+        ]);
+    }
+
+    expect(Post::first()->images)
+        ->toHaveCount(3);
+
+    //clean-up
+    clearImages('posts', Post::first()->images);
 });
 
 it('redirects to the post show page with toast', function () {
