@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -40,6 +41,9 @@ class HandleInertiaRequests extends Middleware
             'csrf_token' => csrf_token(),
             'flash' => [
                 'info' => fn () => $request->session()->get('info')
+            ],
+            'permissions' => [
+                'create_posts' => $request->user()?->can('create', Post::class),
             ],
         ]);
     }

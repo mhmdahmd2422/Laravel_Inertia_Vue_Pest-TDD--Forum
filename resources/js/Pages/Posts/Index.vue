@@ -6,7 +6,7 @@ import Grid from "@/Components/Grid.vue";
 import PostExcerpt from "@/Components/PostExcerpt.vue";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import {router} from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
@@ -35,7 +35,7 @@ watch(search, debounce(function(value){
                 Posts
             </h2>
         </template>
-        <SecondaryButton @click="router.get(route('posts.create'))" class="h-23 pl-3">
+        <SecondaryButton v-show="usePage().props.permissions.create_posts" @click="router.get(route('posts.create'))" class="h-23 pl-3">
             <v-icon name="fa-plus" class="mr-2"/>New Post</SecondaryButton>
         <template #search>
             <input v-model="search"

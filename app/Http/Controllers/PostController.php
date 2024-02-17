@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Post::class);
+    }
+
     /**
      * Display a listing of the resource.
      */

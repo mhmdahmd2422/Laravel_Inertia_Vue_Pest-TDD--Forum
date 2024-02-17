@@ -42,6 +42,11 @@ const props = defineProps({
                         <div class="border-b border-gray-700">
                             <div class="flex h-16 items-center justify-between px-4 sm:px-0">
                                 <div class="flex items-center">
+                                    <div class="mr-4">
+                                        <a :href="route('dashboard')">
+                                            <img src="http://laracasts-forum.test/assets/symbol-negative.png" alt="" class="h-10">
+                                        </a>
+                                    </div>
                                     <div class="hidden md:block">
                                         <div class="flex items-baseline space-x-4">
                                             <a v-for="item in navigation"
