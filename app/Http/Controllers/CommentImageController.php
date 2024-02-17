@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CommentImage;
-use Illuminate\Http\Request;
+use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 
 class CommentImageController extends Controller
 {
-    public function destroy(CommentImage $commentImage): void
+    public function destroy(Image $image): void
     {
-            Storage::disk('public')->delete('images/comments/'. $commentImage->name);
-            $commentImage->delete();
+            Storage::disk('public')->delete('images/comments/'. $image->name);
+            $image->delete();
     }
 }

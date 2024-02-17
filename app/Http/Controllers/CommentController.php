@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use App\Models\CommentImage;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\TemporaryImage;
 use Illuminate\Http\Request;
@@ -95,9 +95,10 @@ class CommentController extends Controller
     {
         $tempImage = TemporaryImage::where('name', $tempImage)->first();
         Storage::disk('public')->move('images/temp/' . $tempImage->name, 'images/comments/' . $tempImage->name);
-        $commentImage = CommentImage::create([
+        $commentImage = Image::create([
             'user_id' => $userId,
-            'comment_id' => $comment->id,
+            'imageable_type' => Comment::class,
+            'imageable_id' => $comment->id,
             'name' => $tempImage->name,
             'extension' => $tempImage->extension,
             'size' => $tempImage->size,

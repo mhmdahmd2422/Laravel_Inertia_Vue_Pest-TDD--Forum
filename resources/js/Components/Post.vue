@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
     <list-item class="hover:bg-white">
-        <div class="sm:flex">
+        <div class="sm:flex flex-wrap">
             <div>
                 <div class="flex row">
                     <img :src="post.user.profile_photo_url" alt="User avatar" class="h-16 w-16 text-gray-300 rounded-full">
@@ -18,6 +18,13 @@ const props = defineProps({
                 </div>
                 <p class="mt-5 text-2xl font-bold">{{post.title}}</p>
                 <p class="mt-4">{{post.body}}</p>
+            </div>
+            <div v-if="post.images?.length" class="flex px-3 mt-3">
+                <div class="grid grid-cols-6 gap-2 justify-evenly mt-4">
+                    <div v-for="(image, index) in post.images" :key="index">
+                        <img v-if="image.id" :src="'/storage/images/posts/' + image.name" class="h-40 w-40 rounded">
+                    </div>
+                </div>
             </div>
         </div>
     </list-item>

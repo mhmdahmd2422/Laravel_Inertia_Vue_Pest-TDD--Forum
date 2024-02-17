@@ -27,14 +27,11 @@ Route::middleware([
     })->name('dashboard');
     Route::post('/upload', [TemporaryImageController::class, 'store']);
     Route::delete('/revert/{fileName}', [TemporaryImageController::class, 'destroy']);
-    Route::delete('/image/{commentImage}', [CommentImageController::class, 'destroy'])
+    Route::delete('/image/{image}', [CommentImageController::class, 'destroy'])
         ->name('image.destroy');
     Route::resource('posts.comments', CommentController::class)
         ->shallow()->only(['store', 'update', 'destroy']);
+    Route::resource('posts', PostController::class)->only(['store', 'create']);
 });
 
-Route::get('posts', [PostController::class, 'index'])
-    ->name('posts.index');
-
-Route::get('posts/{post}', [PostController::class, 'show'])
-    ->name('posts.show');
+Route::resource('posts' , PostController::class)->only(['index', 'show']);

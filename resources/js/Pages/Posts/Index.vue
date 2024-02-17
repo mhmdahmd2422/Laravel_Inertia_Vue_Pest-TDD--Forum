@@ -7,6 +7,7 @@ import PostExcerpt from "@/Components/PostExcerpt.vue";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
 import {router} from "@inertiajs/vue3";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
     posts: Object,
@@ -34,17 +35,19 @@ watch(search, debounce(function(value){
                 Posts
             </h2>
         </template>
+        <SecondaryButton @click="router.get(route('posts.create'))" class="h-23 pl-3">
+            <v-icon name="fa-plus" class="mr-2"/>New Post</SecondaryButton>
         <template #search>
             <input v-model="search"
                    type="text"
                    placeholder="Search"
-                   class="h-12 w-56 rounded-full text-black placeholder-grey-800"
+                   class="h-12 pl-4 w-56 rounded-full text-black placeholder-grey-800"
             >
         </template>
         <div v-if="!posts.data.length" class="grid justify-items-center bg-gray-400 text-gray-600 h-16 rounded-md">
             No Posts Found!
         </div>
-        <Grid class="mt-6">
+        <Grid>
             <PostExcerpt v-for="post in posts.data"
                    :key="post.id"
                    :title="post.title"

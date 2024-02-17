@@ -47,7 +47,9 @@ const deleteImage = (index) => {
 const cancelEditComment = () => {
     commentIdBeingEdited.value = null;
     commentForm.reset();
-}
+};
+
+let commentFormKey = ref(0);
 
 const addComment = () => {
     return commentForm.post(route('posts.comments.store', props.post.id),
@@ -56,6 +58,7 @@ const addComment = () => {
             onSuccess: () => {
                 commentForm.reset();
                 items.value = [props.comments.data[0] ,...items.value];
+                commentFormKey.value += 1;
             },
         },
     );
@@ -64,7 +67,7 @@ const addComment = () => {
 const { confirmation } = useConfirm();
 
 const updateComment = async () => {
-    if (!await confirmation('Are you sure you want to delete this comment?')) {
+    if (!await confirmation('Are you sure you want to update this comment?')) {
         editArea.value.commentTextAreaRef?.focus();
         return;
     }
@@ -77,14 +80,15 @@ const updateComment = async () => {
             preserveScroll: true,
             onSuccess: () => {
                 window.history.replaceState({}, '', props.comments.meta.path);
-                for (const [key, comment] of Object.entries(items.value)) {
+                for (const [commentkey, comment] of Object.entries(items.value)) {
                     if (comment.id === commentIdBeingEdited.value) {
-                        items.value[key].body = commentForm.body;
+                        items.value[commentkey].body = commentForm.body;
                         if (commentForm.images?.length) {
                             let counter = 0;
-                            for (const [element] of Object.entries(commentForm.images)) {
+                            for (const [Key, element] of Object.entries(commentForm.images)) {
+                                console.log(element);
                                 if (!element.id) {
-                                    items.value[key].images.push({
+                                    items.value[commentkey].images.push({
                                         "id": usePage().props.flash?.info[counter],
                                         "name": element
                                     });
@@ -96,6 +100,7 @@ const updateComment = async () => {
                 }
                 commentForm.reset();
                 cancelEditComment();
+                commentFormKey.value += 1;
             },
         },
     );
@@ -126,8 +131,24 @@ const deleteComment = async (commentId) => {
         <Post :post="post"/>
         <div class="mt-5">
             <p class="mt-5 text-2xl font-bold">Comments</p>
-            <CommentForm ref="editArea" @deleteImage="deleteImage" @add="addComment" @update="updateComment" @cancelEdit="cancelEditComment" v-if="$page.props.auth.user" :post="post" :comment-form="commentForm" :inEditMode="!!commentIdBeingEdited" :csrf_token="props.csrf_token"/>
-            <Comment @edit="editComment" @delete="deleteComment" v-for="comment in items" :comment="comment" :key="comment.id"></Comment>
+            <CommentForm ref="editArea"
+                         @deleteImage="deleteImage"
+                         @add="addComment"
+                         @update="updateComment"
+                         @cancelEdit="cancelEditComment"
+                         v-if="$page.props.auth.user"
+                         :post="post"
+                         :comment-form="commentForm"
+                         :inEditMode="!!commentIdBeingEdited"
+                         :csrf_token="props.csrf_token"
+                         :key="commentFormKey"
+            />
+            <Comment @edit="editComment"
+                     @delete="deleteComment"
+                     v-for="comment in items"
+                     :comment="comment"
+                     :key="comment.id"
+            ></Comment>
             <div ref="loader"></div>
         </div>
     </Shell>

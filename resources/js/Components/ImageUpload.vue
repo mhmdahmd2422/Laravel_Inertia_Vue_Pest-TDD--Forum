@@ -61,9 +61,11 @@ setOptions({
         name="image"
         ref="pond"
         class-name="my-pond"
-        label-idle="Click to choose image, or drag here..."
+        label-idle="Click to choose image, or drag here... (Max 6 images)"
         accepted-file-types= 'image/jpg, image/jpeg, image/png'
+        max-files="6"
         allow-multiple="true"
+        allow-drop="true"
         max-file-size="2MB"
         allowImagePreview="false"
     />
