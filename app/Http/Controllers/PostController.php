@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\TemporaryImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -77,15 +78,19 @@ class PostController extends Controller
             }
         }
 
-        return redirect()->route('posts.show', $post)
+        return redirect($post->showRoute())
             ->banner('Post Published.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
+        if(! Str::contains($post->showRoute(), $request->path())){
+            return redirect($post->showRoute($request->query()), status: 301);
+        }
+
         $post->load(['user', 'comments', 'images']);
         return inertia('Posts/Show', [
             'post' => fn () => PostResource::make($post),

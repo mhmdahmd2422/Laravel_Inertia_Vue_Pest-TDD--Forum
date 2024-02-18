@@ -22,6 +22,9 @@ class PostResource extends JsonResource
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'routes' => [
+                'show' => $this->showRoute(),
+            ]
         ];
     }
 }

@@ -50,6 +50,7 @@ watch(search, debounce(function(value){
         <Grid>
             <PostExcerpt v-for="post in posts.data"
                    :key="post.id"
+                   :routes="post.routes"
                    :title="post.title"
                    :body="post.body"
                    :posted-at="post.created_at">

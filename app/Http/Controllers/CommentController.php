@@ -41,7 +41,7 @@ class CommentController extends Controller
             }
         }
 
-        return redirect()->route('posts.show', $post)
+        return redirect($post->showRoute())
             ->banner('Comment Added.');
     }
 
@@ -64,10 +64,9 @@ class CommentController extends Controller
 
         $comment->update($ValidatedData);
 
-        return redirect()->route('posts.show', [
-            'post' => $comment->post_id,
+        return redirect($comment->post->showRoute([
             'page' => $request->query('page')
-        ])
+        ]))
             ->with(['info' => $imagesId?? null])
             ->banner('Comment Updated.');
     }
@@ -85,10 +84,9 @@ class CommentController extends Controller
         }
         $comment->delete();
 
-        return redirect()->route('posts.show', [
-            'post' => $comment->post_id,
+        return redirect($comment->post->showRoute([
             'page' => $request->query('page')
-        ])->banner('Comment Deleted.');;
+        ]))->banner('Comment Deleted.');
     }
 
     public function attachImageToComment(string $tempImage, int $userId, Comment $comment)
