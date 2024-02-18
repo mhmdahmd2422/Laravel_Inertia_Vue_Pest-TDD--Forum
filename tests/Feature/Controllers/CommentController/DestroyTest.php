@@ -67,7 +67,7 @@ it('can delete photos from existing comment that includes photos', function () {
 it('redirects to the post show page with toast', function () {
     $comment = Comment::factory()->create();
     actingAs($comment->user)->delete(route('comments.destroy', $comment))
-        ->assertRedirectToRoute('posts.show', $comment->post_id)
+        ->assertRedirect($comment->post->showRoute())
         ->assertSessionHas('flash.banner', 'Comment Deleted.');
 });
 
@@ -92,5 +92,5 @@ it('prevents deleting a comment created more than one hour ago', function () {
 it('redirects to the post show page with the page query parameter', function () {
     $comment = Comment::factory()->create();
     actingAs($comment->user)->delete(route('comments.destroy', ['comment' => $comment, 'page' => 2]))
-        ->assertRedirectToRoute('posts.show', ['post' => $comment->post_id, 'page' => 2]);
+        ->assertRedirect($comment->post->showRoute(['page' => 2]));
 });

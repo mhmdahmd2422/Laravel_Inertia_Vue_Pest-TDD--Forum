@@ -78,8 +78,8 @@ it('redirects to the post show page with toast', function () {
         ->post(route('posts.comments.store', $post), [
         'body' => 'this is a test comment.'
     ])
-    ->assertRedirectToRoute('posts.show', $post)
-    ->assertSessionHas('flash.banner', 'Comment Added.');
+        ->assertRedirect($post->showRoute())
+        ->assertSessionHas('flash.banner', 'Comment Added.');
 });
 
 it('requires a valid body', function ($testValue) {

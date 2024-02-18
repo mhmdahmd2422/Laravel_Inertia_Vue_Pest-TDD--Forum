@@ -74,7 +74,7 @@ it('can upload and store a post with images', function (){
 
 it('redirects to the post show page with toast', function () {
     actingAs(User::factory()->create())->post(route('posts.store'), $this->validData)
-        ->assertRedirectToRoute('posts.show', Post::latest('id')->first())
+        ->assertRedirect(Post::latest('id')->first()->showRoute())
         ->assertSessionHas('flash.banner', 'Post Published.');;
 });
 

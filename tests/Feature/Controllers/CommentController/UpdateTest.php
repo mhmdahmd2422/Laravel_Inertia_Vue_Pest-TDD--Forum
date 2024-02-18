@@ -62,7 +62,7 @@ it('redirects to the post page', function () {
 
     actingAs($comment->user)
         ->put(route('comments.update', $comment), ['body' => 'This is a new body'])
-        ->assertRedirectToRoute('posts.show', $comment->post)
+        ->assertRedirect($comment->post->showRoute())
         ->assertSessionHas('flash.banner', 'Comment Updated.');
 });
 
@@ -71,7 +71,7 @@ it('redirects to the correct comments page', function () {
 
     actingAs($comment->user)
         ->put(route('comments.update', ['comment' => $comment, 'page' => 2]), ['body' => 'This is a new body'])
-        ->assertRedirectToRoute('posts.show', ['post' => $comment->post, 'page' => 2]);
+        ->assertRedirect($comment->post->showRoute(['page' => 2]));
 });
 
 it('cannot update a comment from another user', function () {
