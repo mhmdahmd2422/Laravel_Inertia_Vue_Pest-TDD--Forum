@@ -7,6 +7,7 @@ import {useInfiniteScroll} from "@/Composables/useInfiniteScroll.js";
 import Shell from "@/Components/Shell.vue";
 import {router, useForm, usePage} from "@inertiajs/vue3";
 import {useConfirm} from "@/Composables/useConfirm.js";
+import ListItem from "@/Components/ListItem.vue";
 
 const props = defineProps({
    post: Object,
@@ -27,6 +28,8 @@ const commentBeingEdited = computed(() => items.value.find(comment => comment.id
 
 const editArea = ref(null);
 const editComment = (commentId) => {
+    commentForm.reset();
+    commentForm.clearErrors();
     commentIdBeingEdited.value = commentId;
     commentForm.body = commentBeingEdited.value?.body;
     commentForm.images = commentBeingEdited.value?.images;
@@ -131,12 +134,22 @@ const deleteComment = async (commentId) => {
         <Post :post="post"/>
         <div class="mt-5">
             <p class="mt-5 text-2xl font-bold">Comments</p>
+            <ListItem v-show="! $page.props.auth.user">
+                <div class="sm:flex justify-center my-3 mx-3">
+                    <p class="text-xl">
+                        <Link class="text-black text-xl hover:bg-gray-700 hover:text-white rounded-md px-1 py-1.5 text-sm font-medium" :href="route('login')">Login</Link>
+                        or
+                        <Link class="text-black text-xl hover:bg-gray-700 hover:text-white rounded-md px-1 py-1.5 text-sm font-medium" :href="route('register')">Register</Link>
+                        to add your comment now!
+                    </p>
+                </div>
+            </ListItem>
             <CommentForm ref="editArea"
                          @deleteImage="deleteImage"
                          @add="addComment"
                          @update="updateComment"
                          @cancelEdit="cancelEditComment"
-                         v-if="$page.props.auth.user"
+                         v-show="$page.props.auth.user"
                          :post="post"
                          :comment-form="commentForm"
                          :inEditMode="!!commentIdBeingEdited"
@@ -149,7 +162,9 @@ const deleteComment = async (commentId) => {
                      :comment="comment"
                      :key="comment.id"
             ></Comment>
-            <div ref="loader"></div>
+            <div ref="loader" class="flex justify-center mt-10">
+                <v-icon name="fa-spinner" scale="2" animation="spin"/>
+            </div>
         </div>
     </Shell>
 </template>

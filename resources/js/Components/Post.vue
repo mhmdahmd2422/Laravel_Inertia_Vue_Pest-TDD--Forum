@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
     <list-item class="hover:bg-white">
-        <div class="sm:flex flex-wrap">
+        <div class="sm:flex flex-wrap mb-2">
             <div>
                 <div class="flex row">
                     <img :src="post.user.profile_photo_url" alt="User avatar" class="h-16 w-16 text-gray-300 rounded-full">

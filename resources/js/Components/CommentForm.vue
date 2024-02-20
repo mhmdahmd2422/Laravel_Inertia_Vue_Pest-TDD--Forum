@@ -28,7 +28,7 @@ defineExpose({
 
 <template>
     <list-item class="my-5">
-        <form v-if="$page.props.auth.user" @submit.prevent="() => inEditMode ? $emit('update') : $emit('add')"  class="mt-4">
+        <form v-if="$page.props.auth.user" @submit.prevent="() => inEditMode ? $emit('update') : $emit('add')">
             <div>
                 <InputLabel for="body" class="sr-only">Comment</InputLabel>
                 <TextArea ref="commentTextAreaRef" v-model="commentForm.body" id="body" placeholder="Tell Us Something..." rows="3"/>
@@ -40,10 +40,15 @@ defineExpose({
                         </div>
                     </div>
                 </div>
-                <ImageUpload :images="commentForm.images" :csrf_token="props.csrf_token"/>
+                <ImageUpload class="mt-2" :images="commentForm.images" :csrf_token="props.csrf_token"/>
                 <InputError :message="commentForm.errors.body" class="mt-1 font-bold"></InputError>
             </div>
-            <PrimaryButton type="submit" class="mt-3" :disabled="commentForm.processing" v-text="inEditMode ? 'Update Comment' : 'Add Comment'"></PrimaryButton>
+            <PrimaryButton type="submit"
+                           class="mt-3"
+                           :class="{ 'opacity-25': commentForm.processing }"
+                           :disabled="commentForm.processing"
+                           v-text="inEditMode ? 'Update Comment' : 'Add Comment'"
+            ></PrimaryButton>
             <v-icon v-if="commentForm.processing" class="ml-3" name="fa-spinner" scale="1.2" animation="spin"/>
             <SecondaryButton v-if="inEditMode" @click="$emit('cancelEdit')" class="ml-2">Cancel</SecondaryButton>
         </form>
