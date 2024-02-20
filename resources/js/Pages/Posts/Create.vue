@@ -8,6 +8,7 @@ import InputError from "@/Components/InputError.vue";
 import ListItem from "@/Components/ListItem.vue";
 import TextArea from "@/Components/TextArea.vue";
 import ImageUpload from "@/Components/ImageUpload.vue";
+import MarkdownEditor from "@/Components/MarkdownEditor.vue";
 
 const props = defineProps({
     csrf_token: String
@@ -37,6 +38,7 @@ const createPost = () => {
                 </div>
                 <div>
                     <InputLabel for="body" class="sr-only">Body</InputLabel>
+                    <MarkdownEditor v-model="form.body"/>
                     <TextArea id="body" class="w-full rounded" v-model="form.body" rows="11"/>
                     <InputError :message="form.errors.body" class="mt-1"/>
                 </div>

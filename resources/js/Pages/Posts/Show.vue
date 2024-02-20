@@ -28,11 +28,13 @@ const commentBeingEdited = computed(() => items.value.find(comment => comment.id
 
 const editArea = ref(null);
 const editComment = (commentId) => {
+    window.history.replaceState({}, '', props.comments.meta.path);
     commentForm.reset();
     commentForm.clearErrors();
     commentIdBeingEdited.value = commentId;
     commentForm.body = commentBeingEdited.value?.body;
     commentForm.images = commentBeingEdited.value?.images;
+    editArea.value.$el.scrollIntoView({block: "center", behavior: "smooth" });
     editArea.value.commentTextAreaRef?.focus();
 }
 
