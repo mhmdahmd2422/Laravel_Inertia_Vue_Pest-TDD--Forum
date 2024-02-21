@@ -2,9 +2,8 @@
 
 import {relativeDate} from "../Utilities/date.js";
 import ListItem from "@/Components/ListItem.vue";
-import DeleteButton from "@/Components/DeleteButton.vue";
-import EditButton from "@/Components/EditButton.vue";
 import {computed} from "vue";
+import CommentOptionsMenu from "@/Components/CommentOptionsMenu.vue";
 
 const props = defineProps({
     comment: Object,
@@ -12,6 +11,7 @@ const props = defineProps({
 const commentWithImages = computed(() => Object.values(props.comment.images).filter(image => image.id));
 
 const emit = defineEmits(['delete', 'edit']);
+
 </script>
 
 <template>
@@ -27,12 +27,9 @@ const emit = defineEmits(['delete', 'edit']);
             <div class="grid grid-rows-1">
                 <span v-if="relativeDate" class="text-sm text-gray-500">{{ relativeDate(comment.created_at) }} ago</span>
                 <div class="flex justify-end mt-2">
-                    <form v-if="comment.can?.delete" @submit.prevent="$emit('delete', comment.id)">
-                        <DeleteButton  type="submit"></DeleteButton>
-                    </form>
-                    <form v-if="comment.can?.update" @submit.prevent="$emit('edit', comment.id)">
-                        <EditButton type="submit"></EditButton>
-                    </form>
+                    <CommentOptionsMenu :comment="comment"
+                                        @delete="$emit('delete', props.comment.id)"
+                                        @edit="$emit('edit', props.comment.id)"/>
                 </div>
             </div>
             <div v-if="comment.images?.length" class="flex ml-7 px-6">
