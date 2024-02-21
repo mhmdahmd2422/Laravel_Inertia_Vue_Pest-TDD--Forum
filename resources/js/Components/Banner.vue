@@ -45,7 +45,7 @@ onUnmounted(() => clearTimeout(timeout.value));
                         <button
                             type="button"
                             class="-me-1 flex p-2 rounded-md focus:outline-none sm:-me-2 transition"
-                            :class="{ 'hover:bg-indigo-600 focus:bg-indigo-600': style == 'success', 'hover:bg-red-600 focus:bg-red-600': style == 'danger' }"
+                            :class="{ 'hover:bg-midnight-100 focus:bg-midnight-100': style == 'success', 'hover:bg-red-700 focus:bg-red-700': style == 'danger' }"
                             aria-label="Dismiss"
                             @click.prevent="show = false"
                         >

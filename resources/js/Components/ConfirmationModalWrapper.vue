@@ -10,16 +10,16 @@ const {state, confirm, cancel} = useConfirm();
 
 const cancelButtonRef = ref(null);
 
-watchEffect(async () => {
-   if(state.show) {
-       await nextTick();
-       cancelButtonRef.value?.$el.focus();
-   }
-});
+// watchEffect(async () => {
+//    if(state.show) {
+//        await nextTick();
+//        cancelButtonRef.value?.$el.focus();
+//    }
+// });
 </script>
 
 <template>
-    <ConfirmationModal :show="state.show">
+    <ConfirmationModal :max-width="'xl'" :show="state.show">
         <template #title>
             {{ state.title }}
         </template>

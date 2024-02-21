@@ -49,8 +49,8 @@ defineExpose({
                            :disabled="commentForm.processing"
                            v-text="inEditMode ? 'Update Comment' : 'Add Comment'"
             ></PrimaryButton>
-            <v-icon v-if="commentForm.processing" class="ml-3" name="fa-spinner" scale="1.2" animation="spin"/>
             <SecondaryButton v-if="inEditMode" @click="$emit('cancelEdit')" class="ml-2">Cancel</SecondaryButton>
+            <v-icon v-if="commentForm.processing" class="ml-3" name="fa-spinner" scale="1.2" animation="spin"/>
         </form>
     </list-item>
 </template>

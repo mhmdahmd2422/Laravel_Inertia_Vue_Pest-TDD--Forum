@@ -139,9 +139,9 @@ const deleteComment = async (commentId) => {
             <ListItem v-show="! $page.props.auth.user">
                 <div class="sm:flex justify-center my-3 mx-3">
                     <p class="text-xl">
-                        <Link class="text-black text-xl hover:bg-gray-700 hover:text-white rounded-md px-1 py-1.5 text-sm font-medium" :href="route('login')">Login</Link>
+                        <Link class="text-midnight-200 text-xl hover:bg-gray-700 hover:text-white rounded-md px-1 py-1.5 text-sm font-medium" :href="route('login')">Login</Link>
                         or
-                        <Link class="text-black text-xl hover:bg-gray-700 hover:text-white rounded-md px-1 py-1.5 text-sm font-medium" :href="route('register')">Register</Link>
+                        <Link class="text-midnight-200 text-xl hover:bg-gray-700 hover:text-white rounded-md px-1 py-1.5 text-sm font-medium" :href="route('register')">Register</Link>
                         to add your comment now!
                     </p>
                 </div>
@@ -165,7 +165,7 @@ const deleteComment = async (commentId) => {
                      :key="comment.id"
             ></Comment>
             <div ref="loader" class="flex justify-center mt-10">
-                <v-icon name="fa-spinner" scale="2" animation="spin"/>
+                <v-icon v-if="items.length" name="fa-spinner" scale="2" animation="spin"/>
             </div>
         </div>
     </Shell>
