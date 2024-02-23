@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommentImageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\Socialite\FacebookLoginController;
 use App\Http\Controllers\TemporaryImageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,13 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+
+Route::namespace('Socialite')->prefix('login/')->group(function(){
+    Route::get('facebook', [FacebookLoginController::class, 'redirectToFacebook'])
+        ->name('login.facebook');
+    Route::get('facebook/callback',[FacebookLoginController::class, 'handleFacebookCallback'])
+        ->name('callback.facebook');
 });
 
 Route::middleware([
