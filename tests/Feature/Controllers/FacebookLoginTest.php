@@ -39,7 +39,7 @@ it('can login with facebook api', function (){
 
 });
 
-it('redirects to the correct Google sign in url', function () {
+it('redirects to the correct facebook sign in url', function () {
     $driver = Mockery::mock('Laravel\Socialite\Two\FacebookProvider');
     $driver->shouldReceive('redirect')
         ->andReturn(new RedirectResponse(route('login.facebook')));
