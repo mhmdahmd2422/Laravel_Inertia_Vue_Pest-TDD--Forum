@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommentImageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Socialite\FacebookLoginController;
+use App\Http\Controllers\Socialite\TwitterLoginController;
 use App\Http\Controllers\TemporaryImageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::namespace('Socialite')->prefix('login/')->group(function(){
         ->name('login.facebook');
     Route::get('facebook/callback',[FacebookLoginController::class, 'handleFacebookCallback'])
         ->name('callback.facebook');
+    Route::get('twitter', [TwitterLoginController::class, 'redirectToTwitter'])
+        ->name('login.twitter');
+    Route::get('twitter/callback',[TwitterLoginController::class, 'handleTwitterCallback'])
+        ->name('callback.twitter');
 });
 
 Route::middleware([

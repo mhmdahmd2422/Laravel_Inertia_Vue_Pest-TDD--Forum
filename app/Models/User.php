@@ -78,7 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return Attribute::get(function (): string {
             if($this->profile_photo_path) {
-                if (Str::startsWith($this->profile_photo_path, 'https://')) {
+                if (Str::startsWith($this->profile_photo_path, ['https://', 'http://'])) {
                     return $this->profile_photo_path;
                 }
                 return Storage::disk($this->profilePhotoDisk())->url($this->profile_photo_path);

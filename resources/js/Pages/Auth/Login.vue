@@ -87,7 +87,6 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
-
         <div class="flex items-center mt-8">
             <div class="flex-1 border-t-2 border-gray-200"></div>
             <span class="px-3 text-xl font-bold text-gray-500 bg-white">Or</span>
@@ -97,6 +96,13 @@ const submit = () => {
             <a :href="route('login.facebook')" class="flex justify-between py-1.5 w-full bg-white hover:bg-blue-100 rounded-2xl border border-black">
                 <v-icon name="fa-facebook" scale="1.3" class="ml-2"/>
                 <span>Sign in with Facebook</span>
+                <span class="mr-2"></span>
+            </a>
+        </div>
+        <div class="flex justify-center mt-3">
+            <a :href="route('login.twitter')" class="flex justify-between py-1.5 w-full bg-white hover:bg-blue-100 rounded-2xl border border-black">
+                <v-icon name="fa-twitter" scale="1.3" class="ml-2"/>
+                <span>Sign in with Twitter</span>
                 <span class="mr-2"></span>
             </a>
         </div>

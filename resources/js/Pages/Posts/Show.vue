@@ -165,7 +165,7 @@ const deleteComment = async (commentId) => {
                      :key="comment.id"
             ></Comment>
             <div ref="loader" class="flex justify-center mt-10">
-                <v-icon v-if="items.length" name="fa-spinner" scale="2" animation="spin"/>
+                <v-icon v-if="items.length > 9" name="fa-spinner" scale="2" animation="spin"/>
             </div>
         </div>
     </Shell>
