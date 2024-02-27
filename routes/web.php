@@ -17,7 +17,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::namespace('Socialite')->prefix('login/')->group(function(){
     Route::get('facebook', [FacebookLoginController::class, 'redirectToFacebook'])

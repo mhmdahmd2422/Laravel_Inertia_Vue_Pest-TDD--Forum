@@ -11,20 +11,32 @@ export function useInfiniteScroll(propName, loader){
         if(!canLoadMoreItems.value){
             return;
         }
-        router.get(value().links.next, {}, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-            onSuccess: () => {
-                window.history.replaceState({}, '', initialUrl);
-                items.value = [...items.value, ...value().data];
-            },
-        })
+        if(propName === 'posts'){
+            router.get(value().next_page_url, {}, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                onSuccess: () => {
+                    window.history.replaceState({}, '', initialUrl);
+                    items.value = [...items.value, ...value().data];
+                },
+            });
+        } else {
+            router.get(value().links.next, {}, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                onSuccess: () => {
+                    window.history.replaceState({}, '', initialUrl);
+                    items.value = [...items.value, ...value().data];
+                },
+            });
+        }
     };
 
     if(loader !== null){
         useIntersect(loader, loadMoreItems, {
-            rootMargin: '0px 0px 170px 0px'
+            rootMargin: '0px 0px 200px 0px'
         });
     }
 

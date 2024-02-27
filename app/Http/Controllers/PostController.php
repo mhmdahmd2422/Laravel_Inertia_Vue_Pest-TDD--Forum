@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewPostPublished;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use App\Models\Image;
@@ -77,6 +78,8 @@ class PostController extends Controller
                 }
             }
         }
+
+        NewPostPublished::dispatch(PostResource::make($post));
 
         return redirect($post->showRoute())
             ->banner('Post Published.');

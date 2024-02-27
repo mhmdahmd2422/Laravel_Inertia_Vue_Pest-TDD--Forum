@@ -21,7 +21,14 @@ const commentForm = useForm({
 });
 
 const loader = ref(null);
-const {items, loadMoreItems} = useInfiniteScroll('comments', loader);
+const {items} = useInfiniteScroll('comments', loader);
+
+const newComment = ref(null);
+window.Echo.channel('comments.' + props.post.id)
+    .listen('CommentCreated', (comment) => {
+        newComment.value = comment;
+        items.value = [newComment.value.comment ,...items.value];
+    });
 
 const commentIdBeingEdited = ref(null);
 const commentBeingEdited = computed(() => items.value.find(comment => comment.id === commentIdBeingEdited.value));
@@ -67,6 +74,20 @@ const addComment = () => {
             },
         },
     );
+    // axios({
+    //     method: 'post',
+    //     url: 'comments',
+    //     data: {
+    //         body: commentForm.body,
+    //         images: commentForm.images,
+    //     }
+    // }).then(function () {
+    //     commentForm.reset();
+    //     items.value = [props.comments.data[0] ,...items.value];
+    //     commentFormKey.value += 1;
+    //     usePage().props.jetstream.flash.bannerStyle = 'success';
+    //     usePage().props.jetstream.flash.banner = 'Comment Added.';
+    // });
 };
 
 const { confirmation } = useConfirm();
@@ -91,7 +112,6 @@ const updateComment = async () => {
                         if (commentForm.images?.length) {
                             let counter = 0;
                             for (const [Key, element] of Object.entries(commentForm.images)) {
-                                console.log(element);
                                 if (!element.id) {
                                     items.value[commentkey].images.push({
                                         "id": usePage().props.flash?.info[counter],
@@ -158,12 +178,21 @@ const deleteComment = async (commentId) => {
                          :csrf_token="props.csrf_token"
                          :key="commentFormKey"
             />
+            <transition-group
+                enter-active-class="transition duration-900 ease-out"
+                enter-from-class="transform scale-60 opacity-50"
+                enter-to-class="transform scale-100 opacity-100"
+                leave-active-class="transition duration-900 ease-out"
+                leave-from-class="transform scale-100 opacity-50"
+                leave-to-class="transform scale-95 opacity-0"
+            >
             <Comment @edit="editComment"
                      @delete="deleteComment"
                      v-for="comment in items"
                      :comment="comment"
                      :key="comment.id"
             ></Comment>
+            </transition-group>
             <div ref="loader" class="flex justify-center mt-10">
                 <v-icon v-if="items.length > 9" name="fa-spinner" scale="2" animation="spin"/>
             </div>

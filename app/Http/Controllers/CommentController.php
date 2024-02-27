@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
 use App\Models\Comment;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\TemporaryImage;
+use App\Notifications\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
@@ -40,6 +43,15 @@ class CommentController extends Controller
                 }
             }
         }
+
+        $comment->load(['user', 'images']);
+        CommentCreated::dispatch($comment);
+
+        $post->user->notify(new Activity(
+            $request->user()->name . ' has commented on your post: "'. Str::limit($post->title, 20). '"',
+            $post->showRoute(),
+            $request->user()->profile_photo_url,
+        ));
 
         return redirect($post->showRoute())
             ->banner('Comment Added.');
