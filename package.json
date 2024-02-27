@@ -31,8 +31,10 @@
         "filepond": "^4.30.6",
         "filepond-plugin-file-validate-size": "^2.2.8",
         "filepond-plugin-image-preview": "^4.6.12",
+        "laravel-echo": "^1.16.0",
         "lodash": "^4.17.21",
         "oh-vue-icons": "^1.0.0-rc3",
+        "pusher-js": "^8.4.0-rc2",
         "tiptap-markdown": "^0.8.9",
         "vue-filepond": "^7.0.4"
     }
