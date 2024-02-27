@@ -1,13 +1,19 @@
 <?php
 
+use App\Events\CommentCreated;
 use App\Models\Comment;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\TemporaryImage;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
+
+BeforeEach(function (){
+   Event::fake();
+});
 
 it('requires authentication', function () {
     post(route('posts.comments.store', Post::factory()->create()))
@@ -27,6 +33,8 @@ it('can store a comment', function (){
         'post_id' => $post->id,
         'body' => 'this is a test comment.'
     ]);
+
+    Event::assertDispatched(CommentCreated::class);
 });
 
 it('can upload and store a comment with images', function (){
@@ -66,6 +74,8 @@ it('can upload and store a comment with images', function (){
 
     expect(Comment::first()->images)
         ->toHaveCount(3);
+
+    Event::assertDispatched(CommentCreated::class);
 
     //clean-up
     clearImages('comments', Comment::first()->images);

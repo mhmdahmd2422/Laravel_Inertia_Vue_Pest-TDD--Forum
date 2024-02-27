@@ -1,14 +1,17 @@
 <?php
 
+use App\Events\NewPostPublished;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\TemporaryImage;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
 beforeEach(function (){
+   Event::fake();
    $this->validData = [
        'title' => 'test post title',
        'body' => str_repeat('test post body ', 7)
@@ -29,6 +32,8 @@ it('stores a post', function () {
        'user_id' => $user->id,
         ...$this->validData,
     ]);
+
+    Event::assertDispatched(NewPostPublished::class);
 });
 
 it('can upload and store a post with images', function (){
@@ -67,6 +72,8 @@ it('can upload and store a post with images', function (){
 
     expect(Post::first()->images)
         ->toHaveCount(3);
+
+    Event::assertDispatched(NewPostPublished::class);
 
     //clean-up
     clearImages('posts', Post::first()->images);
