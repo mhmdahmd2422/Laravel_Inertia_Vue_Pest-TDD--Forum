@@ -18,7 +18,7 @@ const emit = defineEmits(['delete', 'edit']);
     <ListItem>
         <div class="sm:flex flex-wrap">
             <div class="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4 self-start">
-                <img :src="comment.user.profile_photo_url" class="h-10 w-10 rounded-full" />
+                <img :src="comment.user.profile_photo_url" class="h-14 w-14 rounded-full" />
             </div>
             <div class="grow">
                 <h4 class="first-letter:uppercase text-lg font-bold">{{ comment.user.name }}</h4>

@@ -6,7 +6,13 @@ export function useInfiniteScroll(propName, loader){
     const value = () => usePage().props[propName];
     const items = ref(value().data);
     const initialUrl = usePage().url;
-    const canLoadMoreItems = computed(() => value().links.next !== null);
+    const canLoadMoreItems = computed(() => {
+        if(propName === 'posts'){
+            return value().next_page_url !== null
+        } else {
+            return value().links.next !== null
+        }
+    });
     const loadMoreItems = () => {
         if(!canLoadMoreItems.value){
             return;

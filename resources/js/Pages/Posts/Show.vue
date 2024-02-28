@@ -21,7 +21,7 @@ const commentForm = useForm({
 });
 
 const loader = ref(null);
-const {items} = useInfiniteScroll('comments', loader);
+const {items, canLoadMoreItems} = useInfiniteScroll('comments', loader);
 
 const newComment = ref(null);
 window.Echo.channel('comments.' + props.post.id)
@@ -194,7 +194,7 @@ const deleteComment = async (commentId) => {
             ></Comment>
             </transition-group>
             <div ref="loader" class="flex justify-center mt-10">
-                <v-icon v-if="items.length > 9" name="fa-spinner" scale="2" animation="spin"/>
+                <v-icon v-if="canLoadMoreItems" name="fa-spinner" scale="2" animation="spin"/>
             </div>
         </div>
     </Shell>
