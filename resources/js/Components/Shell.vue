@@ -7,6 +7,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Banner from "@/Components/Banner.vue";
 import ConfirmationModalWrapper from "@/Components/ConfirmationModalWrapper.vue";
+import NotificationCenter from "@/Components/NotificationCenter.vue";
 
 const logout = () => {
     router.post(route('logout'));
@@ -58,13 +59,9 @@ const props = defineProps({
                                 </div>
                                 <div class="hidden md:block">
                                     <div class="ml-4 flex items-center md:ml-6">
-                                        <button type="button" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                            <span class="sr-only">View notifications</span>
-                                            <BellIcon class="h-6 w-6" aria-hidden="true" />
-                                        </button>
-
+                                        <NotificationCenter/>
                                         <!-- Profile dropdown -->
-                                        <div v-if="$page.props.auth.user" class="ms-3 relative">
+                                        <div v-if="$page.props.auth.user" class="ms-3 relative mr-1">
                                             <Dropdown align="right" width="48">
                                                 <template #trigger>
                                                     <button id="account-dropdown" v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">

@@ -5,16 +5,17 @@ import { createApp, h } from 'vue';
 import {createInertiaApp, Head, Link} from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
-import * as FaIcons from "oh-vue-icons/icons/fa";
+import * as FontAwesomeIcons from "oh-vue-icons/icons/fa";
 import * as RemixIcons from "oh-vue-icons/icons/ri";
 import * as BootstrapIcons from "oh-vue-icons/icons/bi";
+import { CoReload } from "oh-vue-icons/icons";
 import {addIcons, OhVueIcon} from "oh-vue-icons";
 import { OiReport } from "oh-vue-icons/icons";
 
-const Fa = Object.values({ ...FaIcons });
+const Fa = Object.values({ ...FontAwesomeIcons });
 const Ri = Object.values({ ...RemixIcons });
 const Bi = Object.values({ ...BootstrapIcons });
-addIcons(...Fa, ...Ri, ...Bi, OiReport);
+addIcons(...Fa, ...Ri, ...Bi, OiReport, CoReload);
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

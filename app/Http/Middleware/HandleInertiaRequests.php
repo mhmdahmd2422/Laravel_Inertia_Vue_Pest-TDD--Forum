@@ -42,6 +42,10 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'info' => fn () => $request->session()->get('info')
             ],
+            'notifications' => [
+                'data' => $request->user()?->notifications,
+                'unread' => $request->user()?->unreadnotifications->count()
+            ],
             'permissions' => [
                 'create_posts' => $request->user()?->can('create', Post::class),
             ],

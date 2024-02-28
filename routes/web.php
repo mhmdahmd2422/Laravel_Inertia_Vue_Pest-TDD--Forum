@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\Socialite\FacebookLoginController;
 use App\Http\Controllers\Socialite\TwitterLoginController;
 use App\Http\Controllers\TemporaryImageController;
+use App\Http\Controllers\UserNotificationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -45,6 +46,8 @@ Route::middleware([
     Route::resource('posts.comments', CommentController::class)
         ->shallow()->only(['store', 'update', 'destroy']);
     Route::resource('posts', PostController::class)->only(['store', 'create']);
+    Route::post('notifications/markAsRead/{notification}', [UserNotificationController::class, 'markAsRead']);
+    Route::post('notifications/markAllAsRead/{user}', [UserNotificationController::class, 'markAllAsRead']);
 });
 
 Route::get('posts/{post}/{slug}', [PostController::class, 'show'])
