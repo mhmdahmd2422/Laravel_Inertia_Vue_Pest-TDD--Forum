@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -72,6 +73,33 @@ class User extends Authenticatable implements MustVerifyEmail
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function rooms(): BelongsToMany
+    {
+        return $this->belongsToMany(ChatRoom::class, 'room_user')
+            ->withTimestamps();
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+    public function addRoom($room)
+    {
+        return $this->rooms()->attach($room);
+    }
+
+    public function hasJoined($roomId)
+    {
+        $room = $this->rooms->where('id', $roomId)->first();
+
+        return $room ? true : false;
     }
 
     public function receivesBroadcastNotificationsOn(): string

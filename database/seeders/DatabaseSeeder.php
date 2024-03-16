@@ -22,14 +22,11 @@ class DatabaseSeeder extends Seeder
              ->recycle($users)
              ->has(Comment::factory(20)->recycle($users))
              ->create();
-//         $comments = Comment::factory(200)
-//             ->recycle($users)
-//             ->recycle($posts)
-//             ->create();
-        if(App::environment() === 'local'){
-            $testUser = User::factory()
+
+        if (App::environment() === 'local') {
+            User::factory()
                 ->has(Post::factory(50)->withFixture())
-                ->has(Comment::factory(100)->recycle($posts))
+                ->has(Comment::factory(50)->recycle($posts))
                 ->create([
                     'name' => 'Test User',
                     'email' => 'test@example.com',

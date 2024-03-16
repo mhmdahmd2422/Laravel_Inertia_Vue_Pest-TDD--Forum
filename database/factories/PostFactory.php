@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -42,7 +42,7 @@ class PostFactory extends Factory
         return $this->sequence(...$posts);
     }
 
-    private function getFixtures(): \Illuminate\Support\Collection
+    private static function getFixtures(): Collection
     {
         return self::$fixtures ??= collect(File::files(database_path('factories/fixtures/posts')))
             ->map(fn (SplFileInfo $fileInfo) => $fileInfo->getContents());

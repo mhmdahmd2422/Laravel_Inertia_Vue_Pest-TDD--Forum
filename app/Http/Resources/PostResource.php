@@ -16,10 +16,10 @@ class PostResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => UserResource::make($this->whenLoaded('user')),
+            'user' => $this->whenLoaded('user', fn() => UserResource::make($this->user)),
             'title' => $this->title,
             'body' => $this->body,
-            'images' => ImageResource::collection($this->whenLoaded('images')),
+            'images' => $this->whenLoaded('images', fn() => ImageResource::collection($this->images)),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'routes' => [
